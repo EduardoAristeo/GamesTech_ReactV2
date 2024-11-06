@@ -14,7 +14,7 @@ const QuillEdit = () => {
         onChange={(value) => {
           setText(value);
         }}
-        placeholder="Type here..."
+        placeholder="Escribe algo..."
       />
     </Paper>
   );

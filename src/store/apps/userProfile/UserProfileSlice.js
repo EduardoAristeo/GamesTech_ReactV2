@@ -1,95 +1,55 @@
 import axios from 'src/utils/axios';
 import { createSlice } from '@reduxjs/toolkit';
-import { map } from 'lodash';
 
-const API_URL = '/api/data/postData';
 
 const initialState = {
-  posts: [],
-  followers: [],
-  gallery: [],
+  nombre: '',
+  apellido: '',
+  department: '',
+  email: '',
+  
 };
 
 export const UserProfileSlice = createSlice({
-  name: 'UserPost',
+  name: 'user',
   initialState,
   reducers: {
-    getPosts: (state, action) => {
-      state.posts = action.payload;
+    setUser: (state, action) => {
+      // Actualiza el estado con los datos del usuario proporcionados en la acción
+      state.nombre = action.payload.nombre;
+      state.apellido = action.payload.apellido;
+      state.department = action.payload.department;
+      state.email = action.payload.email;
+      
     },
-    getFollowers: (state, action) => {
-      state.followers = action.payload;
-    },
-    getPhotos: (state, action) => {
-      state.gallery = action.payload;
-    },
-    onToggleFollow(state, action) {
-      const followerId = action.payload;
-
-      const handleToggle = map(state.followers, (follower) => {
-        if (follower.id === followerId) {
-          return {
-            ...follower,
-            isFollowed: !follower.isFollowed,
-          };
-        }
-        return follower;
-      });
-
-      state.followers = handleToggle;
+    clearUser: (state) => {
+      // Restablece el estado a los valores iniciales
+      state.nombre = '';
+      state.apellido = '';
+      state.department = '';
+      state.email = '';
+      
     },
   },
 });
 
-export const { getPosts, getFollowers, onToggleFollow, getPhotos } = UserProfileSlice.actions;
+export const { setUser, clearUser } = UserProfileSlice.actions;
 
-export const fetchPosts = () => async (dispatch) => {
+// Acción asíncrona para obtener la información del usuario
+export const fetchUser = (userId) => async (dispatch) => {
   try {
-    const response = await axios.get(`${API_URL}`);
-    dispatch(getPosts(response.data));
-  } catch (err) {
-    throw new Error(err);
-  }
-};
-export const likePosts = (postId) => async (dispatch) => {
-  try {
-    const response = await axios.post('/api/data/posts/like', { postId });
-    dispatch(getPosts(response.data.posts));
-  } catch (err) {
-    throw new Error(err);
-  }
-};
-export const addComment = (postId, comment) => async (dispatch) => {
-  try {
-    const response = await axios.post('/api/data/posts/comments/add', { postId, comment });
-    dispatch(getPosts(response.data.posts));
+    const response = await axios.get(`/api/data/user/${userId}`);
+    dispatch(setUser(response.data));
   } catch (err) {
     throw new Error(err);
   }
 };
 
-export const addReply = (postId, commentId, reply) => async (dispatch) => {
+// Otra acción asíncrona si quieres actualizar datos del usuario
+export const updateUser = (userData) => async (dispatch) => {
   try {
-    const response = await axios.post('/api/data/posts/replies/add', { postId, commentId, reply });
-    dispatch(getPosts(response.data.posts));
-  } catch (err) {
-    throw new Error(err);
-  }
-};
-
-export const fetchFollwores = () => async (dispatch) => {
-  try {
-    const response = await axios.get(`/api/data/users`);
-    dispatch(getFollowers(response.data));
-  } catch (err) {
-    throw new Error(err);
-  }
-};
-
-export const fetchPhotos = () => async (dispatch) => {
-  try {
-    const response = await axios.get(`/api/data/gallery`);
-    dispatch(getPhotos(response.data));
+    const response = await axios.put(`/api/data/user/${userData.id}`, userData);
+    dispatch(setUser(response.data));
   } catch (err) {
     throw new Error(err);
   }

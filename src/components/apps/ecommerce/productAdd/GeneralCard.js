@@ -1,45 +1,69 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
+import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
-import { Typography } from '@mui/material';
-import { Grid } from '@mui/material';
+import { Typography, Grid, TextField } from '@mui/material';
 import CustomFormLabel from 'src/components/forms/theme-elements/CustomFormLabel';
-import CustomTextField from 'src/components/forms/theme-elements/CustomTextField';
-import QuillEdit from 'src/views/forms/quill-editor/QuillEdit';
 
-const GeneralCard = () => {
+const GeneralCard = ({ value, onChange }) => {
   return (
     <Box p={3}>
-      <Typography variant="h5">General</Typography>
+      <Typography variant="h5">Datos del producto nuevo</Typography>
 
       <Grid container mt={3}>
-        {/* 1 */}
+        {/* Campo de Nombre */}
         <Grid item xs={12} display="flex" alignItems="center">
-          <CustomFormLabel htmlFor="p_name" sx={{ mt: 0 }}>
-            Product Name{' '}
+          <CustomFormLabel htmlFor="product" sx={{ mt: 0 }}>
+            Nombre{' '}
             <Typography color="error.main" component="span">
               *
             </Typography>
           </CustomFormLabel>
         </Grid>
         <Grid item xs={12}>
-          <CustomTextField id="p_name" placeholder="Product Name" fullWidth />
+          <TextField
+            id="product"
+            placeholder="Nombre del producto"
+            fullWidth
+            variant="outlined"
+            value={value.product} // Asignar el valor del estado
+            onChange={(e) => onChange('product', e.target.value)} // Captura el cambio en el campo de texto
+          />
           <Typography variant="body2">
-            A product name is required and recommended to be unique.
+            El nombre que ingreses será el que aparezca en tickets e inventario.
           </Typography>
         </Grid>
 
-        <Grid item xs={12} display="flex" alignItems="center">
-          <CustomFormLabel htmlFor="desc">Description</CustomFormLabel>
+        {/* Campo de Descripción */}
+        <Grid item xs={12} display="flex" alignItems="center" mt={3}>
+          <CustomFormLabel htmlFor="description">Descripción</CustomFormLabel>
         </Grid>
         <Grid item xs={12}>
-          <QuillEdit />
+          <TextField
+            id="description"
+            placeholder="Descripción del producto"
+            multiline
+            rows={4}
+            fullWidth
+            variant="outlined"
+            value={value.description} // Asignar el valor del estado
+            onChange={(e) => onChange('description', e.target.value)} // Captura el cambio en el campo de texto
+          />
           <Typography variant="body2">
-            Set a description to the product for better visibility.
+            Coloca una breve descripción del producto.
           </Typography>
         </Grid>
       </Grid>
     </Box>
   );
+};
+
+GeneralCard.propTypes = {
+  value: PropTypes.shape({
+    product: PropTypes.string,
+    description: PropTypes.string,
+  }).isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default GeneralCard;

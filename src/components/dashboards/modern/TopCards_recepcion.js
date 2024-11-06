@@ -2,49 +2,49 @@
 import React from 'react';
 import { Box, CardContent, Grid, Typography } from '@mui/material';
 
-import icon1 from '../../../assets/images/svgs/icon-connect.svg';
-import icon2 from '../../../assets/images/svgs/icon-user-male.svg';
-import icon3 from '../../../assets/images/svgs/icon-briefcase.svg';
-import icon4 from '../../../assets/images/svgs/icon-mailbox.svg';
-import icon5 from '../../../assets/images/svgs/icon-favorites.svg';
-import icon6 from '../../../assets/images/svgs/icon-speech-bubble.svg';
+import icon2 from '../../../assets/images/iconos/smartphone.png';
+import icon3 from '../../../assets/images/iconos/case.png';
+import icon4 from '../../../assets/images/iconos/store.png';
+import icon5 from '../../../assets/images/iconos/fix.png';
+import icon6 from '../../../assets/images/iconos/fix_done.png';
+import icon7 from '../../../assets/images/iconos/fix_garantia.png';
 
 const topcards = [
   {
     icon: icon2,
-    title: 'Employees',
+    title: 'Dsipositivos Ingresados',
     digits: '96',
     bgcolor: 'primary',
   },
   {
     icon: icon3,
-    title: 'Clients',
+    title: 'Accesorios vendidos',
     digits: '3,650',
-    bgcolor: 'warning',
-  },
-  {
-    icon: icon4,
-    title: 'Projects',
-    digits: '356',
     bgcolor: 'secondary',
   },
   {
+    icon: icon4,
+    title: 'Dispositivos vendidos',
+    digits: '356',
+    bgcolor: 'warning',
+  },
+  {
     icon: icon5,
-    title: 'Events',
+    title: 'Dispositivos en reparación',
     digits: '696',
-    bgcolor: 'error',
+    bgcolor: 'primary',
   },
   {
     icon: icon6,
-    title: 'Payroll',
-    digits: '$96k',
+    title: 'Dispositivos listos para entrega',
+    digits: '76',
     bgcolor: 'success',
   },
   {
-    icon: icon1,
-    title: 'Reports',
+    icon: icon7,
+    title: 'Garantías pendientes',
     digits: '59',
-    bgcolor: 'info',
+    bgcolor: 'error',
   },
 ];
 

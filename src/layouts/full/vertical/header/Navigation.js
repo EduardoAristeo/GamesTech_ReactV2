@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Box, Menu, Typography, Button, Divider, Grid } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { IconChevronDown, IconHelp } from '@tabler/icons';
+import { Box, Menu, Button, Grid } from '@mui/material';
+
+import { IconChevronDown } from '@tabler/icons';
 import AppLinks from './AppLinks';
-import QuickLinks from './QuickLinks';
+
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 
 const AppDD = () => {
@@ -59,56 +60,12 @@ const AppDD = () => {
             <Grid item sm={8} display="flex">
               <Box p={4} pr={0} pb={3}>
                 <AppLinks />
-                <Divider />
-                <Box
-                  sx={{
-                    display: {
-                      xs: 'none',
-                      sm: 'flex',
-                    },
-                  }}
-                  alignItems="center"
-                  justifyContent="space-between"
-                  pt={2}
-                  pr={4}
-                >
-                  <Link to="/faq">
-                    <Typography
-                      variant="subtitle2"
-                      fontWeight="600"
-                      color="textPrimary"
-                      display="flex"
-                      alignItems="center"
-                      gap="4px"
-                    >
-                      <IconHelp width={24} />
-                      Frequently Asked Questions
-                    </Typography>
-                  </Link>
-                  <Button variant="contained" color="primary">
-                    Check
-                  </Button>
-                </Box>
-              </Box>
-              <Divider orientation="vertical" />
-            </Grid>
-            <Grid item sm={4}>
-              <Box p={4}>
-                <QuickLinks />
               </Box>
             </Grid>
+            
           </Grid>
         </Menu>
       </Box>
-      <Button color="inherit" sx={{color: (theme) => theme.palette.text.secondary}} variant="text" to="/apps/chats" component={Link}>
-        Chat
-      </Button>
-      <Button color="inherit" sx={{color: (theme) => theme.palette.text.secondary}} variant="text" to="/apps/calendar" component={Link}>
-        Calendar
-      </Button>
-      <Button color="inherit" sx={{color: (theme) => theme.palette.text.secondary}} variant="text" to="/apps/email" component={Link}>
-        Email
-      </Button>
     </>
   );
 };

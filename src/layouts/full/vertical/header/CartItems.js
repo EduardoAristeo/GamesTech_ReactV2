@@ -4,13 +4,18 @@ import { Link } from 'react-router-dom';
 import { IconMinus, IconPlus } from '@tabler/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import emptyCart from 'src/assets/images/products/empty-shopping-cart.svg';
-import { increment, decrement } from 'src/store/apps/eCommerce/EcommerceSlice';
+import { increment, decrement, deleteCart } from 'src/store/apps/eCommerce/EcommerceSlice';
 
 const CartItems = () => {
   const dispatch = useDispatch();
+  const cartProducts = useSelector((state) => state.ecommerce.cart);
+  const categories = useSelector((state) => state.ecommerce.categories);
 
-  // Get Products
-  const Cartproduct = useSelector((state) => state.ecommerceReducer.cart);
+  // Función para obtener el nombre de la categoría usando el ID de la categoría
+  const getCategoryName = (categoryId) => {
+    const category = categories.find((cat) => cat._id === categoryId);
+    return category ? category.category : 'Categoría desconocida';
+  };
 
   const Increase = (productId) => {
     dispatch(increment(productId));
@@ -20,45 +25,55 @@ const CartItems = () => {
     dispatch(decrement(productId));
   };
 
+  const handleRemove = (productId) => {
+    dispatch(deleteCart(productId));
+  };
+
   return (
     <Box px={3}>
-      {Cartproduct.length > 0 ? (
+      {cartProducts.length > 0 ? (
         <>
-          {Cartproduct.map((product, index) => (
-            <Box key={product.id + index * index}>
+          {cartProducts.map((product) => (
+            <Box key={product._id}>
               <Stack direction="row" spacing={2} py={3}>
                 <Avatar
-                  src={product.photo}
-                  alt={product.photo}
+                  src={`http://localhost:4000/images/products/${product._id}.png`} // Ajusta la ruta según tu backend
+                  alt={product.product}
                   sx={{
                     borderRadius: '10px',
                     height: '75px',
-                    width: '95px',
+                    width: '105px',
                   }}
                 />
                 <Box>
                   <Typography variant="subtitle2" color="textPrimary" fontWeight="500">
-                    {product.title}
-                  </Typography>{' '}
+                    {product.product || 'Producto sin nombre'}
+                  </Typography>
                   <Typography color="textSecondary" variant="body1">
-                    {' '}
-                    {product.category}
+                    {getCategoryName(product.category)}
                   </Typography>
                   <Stack direction="row" alignItems="center" spacing={2} mt="5px">
                     <Typography variant="subtitle2" color="textSecondary">
-                      ${product.price * product.qty}
+                      ${((product.discount ? product.price - (product.price * product.discount) / 100 : product.price)* product.qty).toFixed(2)} {/* Calcula el total */}
                     </Typography>
                     <ButtonGroup size="small" color="success" aria-label="small button group">
-                      <Button onClick={() => Decrease(product.id)} disabled={product.qty < 2}>
+                      <Button onClick={() => Decrease(product._id)} disabled={product.qty <= 1}>
                         <IconMinus stroke={1.5} size="0.8rem" />
                       </Button>
                       <Button>{product.qty}</Button>
-                      <Button onClick={() => Increase(product.id)}>
+                      <Button onClick={() => Increase(product._id)}>
                         <IconPlus stroke={1.5} size="0.8rem" />
                       </Button>
                     </ButtonGroup>
                   </Stack>
                 </Box>
+                <Button
+                  color="error"
+                  onClick={() => handleRemove(product._id)} 
+                  sx={{ marginLeft: 'auto' }}
+                >
+                  Remove
+                </Button>
               </Stack>
               <Divider />
             </Box>

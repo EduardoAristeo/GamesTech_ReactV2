@@ -1,4 +1,5 @@
 
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import Box from '@mui/material/Box';
 import { Chip, Typography, useTheme } from '@mui/material';
@@ -28,7 +29,7 @@ const MediaCard = () => {
 
   return (
     <Box p={3}>
-      <Typography variant="h5">Media</Typography>
+      <Typography variant="h5">Medias</Typography>
 
       <Box
         mt={3}
@@ -44,7 +45,7 @@ const MediaCard = () => {
         {...getRootProps({ className: 'dropzone' })}
       >
         <input {...getInputProps()} />
-        <p>Drag 'n' drop some files here, or click to select files</p>
+        <p>Drag  drop some files here, or click to select files</p>
       </Box>
       <Box mt={2}>
         <Typography variant="h6" fontSize="15px">

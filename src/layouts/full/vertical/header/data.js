@@ -5,7 +5,7 @@ import img4 from 'src/assets/images/profile/user-4.jpg';
 
 import icon1 from 'src/assets/images/svgs/icon-account.svg';
 import icon2 from 'src/assets/images/svgs/icon-inbox.svg';
-import icon3 from 'src/assets/images/svgs/icon-tasks.svg';
+
 
 import ddIcon1 from 'src/assets/images/svgs/icon-dd-chat.svg';
 import ddIcon2 from 'src/assets/images/svgs/icon-dd-cart.svg';
@@ -13,8 +13,6 @@ import ddIcon3 from 'src/assets/images/svgs/icon-dd-invoice.svg';
 import ddIcon4 from 'src/assets/images/svgs/icon-dd-date.svg';
 import ddIcon5 from 'src/assets/images/svgs/icon-dd-mobile.svg';
 import ddIcon6 from 'src/assets/images/svgs/icon-dd-lifebuoy.svg';
-import ddIcon7 from 'src/assets/images/svgs/icon-dd-message-box.svg';
-import ddIcon8 from 'src/assets/images/svgs/icon-dd-application.svg';
 
 //
 // Notifications dropdown
@@ -68,76 +66,62 @@ const notifications = [
 const profile = [
   {
     href: '/user-profile',
-    title: 'My Profile',
-    subtitle: 'Account Settings',
+    title: 'Mi horario',
+    subtitle: 'Revisar horario laboral',
     icon: icon1,
   },
   {
     href: '/apps/email',
-    title: 'My Inbox',
-    subtitle: 'Messages & Emails',
+    title: 'Mis nominas',
+    subtitle: 'Revisar mis nominas',
     icon: icon2,
   },
-  {
-    href: '/apps/notes',
-    title: 'My Tasks',
-    subtitle: 'To-do and Daily Tasks',
-    icon: icon3,
-  },
+  
 ];
 
 // apps dropdown
 
 const appsLink = [
   {
-    href: '/apps/chats',
-    title: 'Chat Application',
-    subtext: 'Messages & Emails',
+    href: 'https://web.whatsapp.com/',
+    title: 'Web WhatsApp',
+    subtext: 'Abrir WhatsApp business',
     avatar: ddIcon1,
   },
   {
-    href: '/apps/ecommerce/shop',
-    title: 'eCommerce App',
-    subtext: 'Messages & Emails',
+    href: 'https://www.facebook.com/',
+    title: 'Facebook',
+    subtext: 'Abrir Facebook',
     avatar: ddIcon2,
   },
   {
-    href: '/apps/invoice/list',
-    title: 'Invoice App',
-    subtext: 'Messages & Emails',
+    href: 'https://fullunlock-mx.com/',
+    title: 'Servidor 1 ',
+    subtext: 'eSIM - Reportes IMEI - Unlock',
     avatar: ddIcon3,
   },
   {
-    href: '/apps/calendar',
-    title: 'Calendar App',
-    subtext: 'Messages & Emails',
+    href: 'https://www.instagram.com/',
+    title: 'Instagram',
+    subtext: 'Abrir Instagram',
     avatar: ddIcon4,
   },
   {
-    href: '/apps/contacts',
-    title: 'Contact Application',
-    subtext: 'Account settings',
+    href: 'https://ifreeicloud.co.uk/client-area/check',
+    title: 'Servidor 2',
+    subtext: 'Checks iCloud',
     avatar: ddIcon5,
   },
   {
-    href: '/apps/tickets',
-    title: 'Tickets App',
-    subtext: 'Account settings',
+    href: 'https://www.ift.org.mx/usuarios-y-audiencias/consulta-de-imei',
+    title: 'IFT Mexico',
+    subtext: 'Consulta IMEI',
     avatar: ddIcon6,
   },
-  {
-    href: '/apps/email',
-    title: 'Email App',
-    subtext: 'To-do and Daily tasks',
-    avatar: ddIcon7,
-  },
-  {
-    href: '/dashboards/ecommerce',
-    title: 'Ecom Dashboard ',
-    subtext: 'Data-genic Dashbaords',
-    avatar: ddIcon8,
-  },
+  
 ];
+
+
 
 const pageLinks = [
   {
@@ -173,5 +157,7 @@ const pageLinks = [
     title: 'Shopping Cart',
   },
 ];
+
+
 
 export { notifications, profile, pageLinks, appsLink };

@@ -1,14 +1,24 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { Box, Avatar, Typography, IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { useSelector } from 'react-redux';
-import img1 from 'src/assets/images/profile/user-1.jpg';
 import { IconPower } from '@tabler/icons';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const Profile = () => {
+  // Obtener datos del usuario desde Redux
+  const user = useSelector((state) => state.user);
   const customizer = useSelector((state) => state.customizer);
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   const hideMenu = lgUp ? customizer.isCollapse && !customizer.isSidebarHover : '';
+
+  console.log('User:', user);
+
+  // Comprobar si el usuario está cargado para evitar errores
+  if (!user || !user.nombre) {
+    return null; // O un loader/spinner si prefieres mostrar algo mientras se cargan los datos
+  }
+
   return (
     <Box
       display={'flex'}
@@ -18,15 +28,24 @@ export const Profile = () => {
     >
       {!hideMenu ? (
         <>
-          <Avatar alt="Remy Sharp" src={img1} />
+          <Avatar 
+            alt={user.nombre} 
+            src={user.avatar || 'src/assets/images/profile/default-avatar.jpg'} 
+          />
 
           <Box>
-            <Typography variant="h6"  color="textPrimary">Mathew</Typography>
-            <Typography variant="caption" color="textSecondary">Designer</Typography>
+            <Typography variant="h6" color="textPrimary">{user.nombre}</Typography>
+            <Typography variant="caption" color="textSecondary">{user.department}</Typography>
           </Box>
           <Box sx={{ ml: 'auto' }}>
             <Tooltip title="Logout" placement="top">
-              <IconButton color="primary" component={Link} to="/auth/login" aria-label="logout" size="small">
+              <IconButton 
+                color="primary" 
+                component={Link} 
+                to="/auth/login" 
+                aria-label="logout" 
+                size="small"
+              >
                 <IconPower size="20" />
               </IconButton>
             </Tooltip>

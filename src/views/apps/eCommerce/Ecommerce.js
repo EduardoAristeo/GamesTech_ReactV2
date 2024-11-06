@@ -10,19 +10,19 @@ import AppCard from 'src/components/shared/AppCard';
 
 const BCrumb = [
   {
-    to: '/',
-    title: 'Home',
+   
+    title: 'Vender',
   },
   {
-    title: 'Shop',
+    title: 'Accesorios',
   },
 ];
 const Ecommerce = () => {
   const [isMobileSidebarOpen, setMobileSidebarOpen] = React.useState(true);
   return (
-    <PageContainer title="Shop List" description="this is Shop List page">
+    <PageContainer title="Tienda" description="Ventas en sucursal">
       {/* breadcrumb */}
-      <Breadcrumb title="Ecom-Shop" items={BCrumb} />
+      <Breadcrumb title="Tienda GamesTech" items={BCrumb} />
       <AppCard>
         {/* ------------------------------------------- */}
         {/* Left part */}

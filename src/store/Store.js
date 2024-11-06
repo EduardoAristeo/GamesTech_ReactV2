@@ -17,10 +17,8 @@ export const store = configureStore({
     notesReducer: NotesReducer,
     contactsReducer: ContactsReducer,
     ticketReducer: TicketReducer,
-    ecommerceReducer: EcommerceReducer,
-    userpostsReducer: UserProfileReducer,
+    ecommerce: EcommerceReducer,
+    user: UserProfileReducer, // Cambiado a 'user' para que coincida con el selector
     blogReducer: BlogReducer,
   },
 });
-
-export default store;

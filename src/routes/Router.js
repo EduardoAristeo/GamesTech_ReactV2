@@ -9,6 +9,7 @@ const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')))
 
 /* ****Pages***** */
 const ModernDash = Loadable(lazy(() => import('../views/dashboard/Modern')));
+const RecepcionistaHome = Loadable(lazy(() => import('../views/dashboard/Modern_recepcionistahome')));
 const EcommerceDash = Loadable(lazy(() => import('../views/dashboard/Ecommerce')));
 
 /* ****Apps***** */
@@ -28,10 +29,7 @@ const EcomProductList = Loadable(lazy(() => import('../views/apps/eCommerce/Ecom
 const EcomProductCheckout = Loadable(
   lazy(() => import('../views/apps/eCommerce/EcommerceCheckout')),
 );
-const UserProfile = Loadable(lazy(() => import('../views/apps/user-profile/UserProfile')));
-const Followers = Loadable(lazy(() => import('../views/apps/user-profile/Followers')));
-const Friends = Loadable(lazy(() => import('../views/apps/user-profile/Friends')));
-const Gallery = Loadable(lazy(() => import('../views/apps/user-profile/Gallery')));
+
 const InvoiceList = Loadable(lazy(() => import('../views/apps/invoice/List')));
 const InvoiceCreate = Loadable(lazy(() => import('../views/apps/invoice/Create')));
 const InvoiceDetail = Loadable(lazy(() => import('../views/apps/invoice/Detail')));
@@ -154,6 +152,7 @@ const Router = [
     children: [
       { path: '/', element: <Navigate to="/auth/login2" /> },
       { path: '/dashboards/modern', exact: true, element: <ModernDash /> },
+      { path: '/recepcion', exact: true, element: <RecepcionistaHome /> },
       { path: '/dashboards/ecommerce', exact: true, element: <EcommerceDash /> },
       { path: '/apps/chats', element: <Chats /> },
       { path: '/apps/notes', element: <Notes /> },
@@ -172,10 +171,6 @@ const Router = [
       { path: '/apps/invoice/create', element: <InvoiceCreate /> },
       { path: '/apps/invoice/detail/:id', element: <InvoiceDetail /> },
       { path: '/apps/invoice/edit/:id', element: <InvoiceEdit /> },
-      { path: '/apps/followers', element: <Followers /> },
-      { path: '/apps/friends', element: <Friends /> },
-      { path: '/apps/gallery', element: <Gallery /> },
-      { path: '/user-profile', element: <UserProfile /> },
       { path: '/pages/casl', element: <RollbaseCASL /> },
       { path: '/pages/treeview', element: <Treeview /> },
       { path: '/pages/pricing', element: <Pricing /> },

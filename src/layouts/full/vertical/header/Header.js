@@ -1,5 +1,5 @@
-import React from 'react';
-import { IconButton, Box, AppBar, useMediaQuery, Toolbar, styled, Stack } from '@mui/material';
+import React, { useState } from 'react';
+import { IconButton, Box, AppBar, useMediaQuery, Toolbar, styled, Stack, Badge } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -7,16 +7,14 @@ import {
   toggleMobileSidebar,
   setDarkMode,
 } from 'src/store/customizer/CustomizerSlice';
-import { IconMenu2, IconMoon, IconSun } from '@tabler/icons';
+import { IconMenu2, IconMoon, IconSun, IconShoppingCart } from '@tabler/icons';
 
 // components
-import Notifications from './Notifications';
 import Profile from './Profile';
-import Cart from './Cart';
 import Search from './Search';
-import Language from './Language';
 import Navigation from './Navigation';
 import MobileRightSidebar from './MobileRightSidebar';
+import Cart from './Cart'; // Importa el componente Cart directamente
 
 const Header = () => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
@@ -24,7 +22,13 @@ const Header = () => {
 
   // drawer
   const customizer = useSelector((state) => state.customizer);
+  const cartProducts = useSelector((state) => state.ecommerce.cart);
+  const itemCount = cartProducts.length;
+
   const dispatch = useDispatch();
+
+  // Estado para controlar la visibilidad del carrito
+  const [showCart, setShowCart] = useState(false);
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
@@ -65,11 +69,19 @@ const Header = () => {
 
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
-          <Language />
-          {/* ------------------------------------------- */}
-          {/* Ecommerce Dropdown */}
-          {/* ------------------------------------------- */}
-          <Cart />
+          {/* Icono del carrito con contador */}
+          <IconButton
+            size="large"
+            color="inherit"
+            onClick={() => setShowCart(true)} // Abre directamente el componente lateral
+          >
+            <Badge color="error" badgeContent={itemCount}>
+              <IconShoppingCart size="21" stroke="1.5" />
+            </Badge>
+          </IconButton>
+
+          {/* Renderiza el componente Cart */}
+          <Cart showDrawer={showCart} setShowDrawer={setShowCart} />
 
           <IconButton size="large" color="inherit">
             {customizer.activeMode === 'light' ? (
@@ -79,13 +91,6 @@ const Header = () => {
             )}
           </IconButton>
 
-          {/* ------------------------------------------- */}
-          {/* End Ecommerce Dropdown */}
-          {/* ------------------------------------------- */}
-          <Notifications />
-          {/* ------------------------------------------- */}
-          {/* Toggle Right Sidebar for mobile */}
-          {/* ------------------------------------------- */}
           {lgDown ? <MobileRightSidebar /> : null}
           <Profile />
         </Stack>

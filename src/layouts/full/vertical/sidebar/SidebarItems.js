@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import Menuitems from './MenuItems';
 import { useLocation } from 'react-router';
@@ -7,6 +8,7 @@ import { toggleMobileSidebar } from 'src/store/customizer/CustomizerSlice';
 import NavItem from './NavItem';
 import NavCollapse from './NavCollapse';
 import NavGroup from './NavGroup/NavGroup';
+import { useAuth } from 'src/context/AuthContext'; // Importar el hook personalizado
 
 const SidebarItems = () => {
   const { pathname } = useLocation();
@@ -16,17 +18,20 @@ const SidebarItems = () => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   const hideMenu = lgUp ? customizer.isCollapse && !customizer.isSidebarHover : '';
   const dispatch = useDispatch();
+  const { user } = useAuth(); // Obtener el usuario logueado y su departamento
+
+  // Filtrar los ítems del menú según el departamento del usuario
+  const filteredMenuItems = Menuitems.filter((item) => {
+    if (!item.roles) return true; // Si no hay roles definidos, mostrar el ítem para todos
+    return item.roles.includes(user?.department); // Mostrar ítems que coincidan con el departamento
+  });
 
   return (
     <Box sx={{ px: 3 }}>
       <List sx={{ pt: 0 }} className="sidebarNav">
-        {Menuitems.map((item, index) => {
-          // {/********SubHeader**********/}
+        {filteredMenuItems.map((item) => {
           if (item.subheader) {
             return <NavGroup item={item} hideMenu={hideMenu} key={item.subheader} />;
-
-            // {/********If Sub Menu**********/}
-            /* eslint no-else-return: "off" */
           } else if (item.children) {
             return (
               <NavCollapse
@@ -39,8 +44,6 @@ const SidebarItems = () => {
                 onClick={() => dispatch(toggleMobileSidebar())}
               />
             );
-
-            // {/********If Sub No Menu**********/}
           } else {
             return (
               <NavItem
@@ -57,4 +60,5 @@ const SidebarItems = () => {
     </Box>
   );
 };
+
 export default SidebarItems;

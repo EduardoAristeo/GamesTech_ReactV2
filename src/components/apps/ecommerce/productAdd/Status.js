@@ -1,33 +1,31 @@
-
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
-import { Grid, Typography } from '@mui/material';
-import { MenuItem, Avatar } from '@mui/material';
+import { Grid, Typography, MenuItem, Avatar } from '@mui/material';
 import CustomSelect from 'src/components/forms/theme-elements/CustomSelect';
 
-const StatusCard = () => {
-  const [status, setStatus] = useState(0);
+const StatusCard = ({ onChange }) => {
+  const [status, setStatus] = useState('Publicado'); // Estado inicial como cadena
+
   const handleChange = (event) => {
-    setStatus(event.target.value);
-    console.log('test');
+    const newStatus = event.target.value;
+    setStatus(newStatus);
+    onChange(newStatus); // Notifica al componente padre con la cadena 'Publicado' o 'Oculto'
   };
 
   return (
     <Box p={3}>
       <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Typography variant="h5">Status</Typography>
+        <Typography variant="h5">Estado</Typography>
 
         <Avatar
           sx={{
             backgroundColor:
-              status === 0
+              status === 'Publicado'
                 ? 'primary.main'
-                : status === 1
+                : status === 'Oculto'
                 ? 'error.main'
-                : status === 2
-                ? 'secondary.main'
-                : status === 3
-                ? 'warning.main'
                 : 'error.main',
             '& svg': { display: 'none' },
             width: 15,
@@ -39,16 +37,19 @@ const StatusCard = () => {
       <Grid container mt={3}>
         <Grid item xs={12}>
           <CustomSelect value={status} onChange={handleChange} fullWidth>
-            <MenuItem value={0}>Published</MenuItem>
-            <MenuItem value={1}>Draft</MenuItem>
-            <MenuItem value={2}>Scheduled</MenuItem>
-            <MenuItem value={3}>In active</MenuItem>
+            <MenuItem value="Publicado">Publicado</MenuItem>
+            <MenuItem value="Oculto">Oculto</MenuItem>
           </CustomSelect>
-          <Typography variant="body2">Set the product status.</Typography>
+          <Typography variant="body2">Selecciona si quieres que el producto aparezca en tienda.</Typography>
         </Grid>
       </Grid>
     </Box>
   );
+};
+
+// Agregar propTypes para validar las props
+StatusCard.propTypes = {
+  onChange: PropTypes.func.isRequired,
 };
 
 export default StatusCard;
