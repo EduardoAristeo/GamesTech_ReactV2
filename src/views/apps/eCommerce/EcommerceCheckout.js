@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { Box } from '@mui/material';
 import Breadcrumb from '../../../layouts/full/shared/breadcrumb/Breadcrumb';
@@ -7,19 +8,19 @@ import ChildCard from 'src/components/shared/ChildCard';
 
 const BCrumb = [
   {
-    to: '/',
-    title: 'Home',
+    to: '/apps/ecommerce/shop',
+    title: 'Tienda Accesorios',
   },
   {
-    title: 'Checkout',
+    title: 'Confirmar Venta',
   },
 ];
 
 const EcommerceCheckout = () => {
   return (
-    <PageContainer title="Checkout" description="this is Shop List page">
+    <PageContainer title="Confirmar Venta" description="Pagina de confirmación">
       {/* breadcrumb */}
-      <Breadcrumb title="Checkout" items={BCrumb} />
+      <Breadcrumb title="Confirmar Venta" items={BCrumb} />
       <ChildCard>
         {/* ------------------------------------------- */}
         {/* Right part */}
