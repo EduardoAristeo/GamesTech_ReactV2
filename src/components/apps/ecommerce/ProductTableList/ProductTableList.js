@@ -29,6 +29,7 @@ import { fetchProducts } from 'src/store/apps/eCommerce/EcommerceSlice';
 import CustomCheckbox from '../../../forms/theme-elements/CustomCheckbox';
 import CustomSwitch from '../../../forms/theme-elements/CustomSwitch';
 import { IconEdit, IconEye, IconFilter, IconSearch, IconTrash } from '@tabler/icons';
+import { fetchCategories } from '../../../../store/apps/eCommerce/EcommerceSlice';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -67,7 +68,7 @@ const headCells = [
     id: 'pname',
     numeric: false,
     disablePadding: false,
-    label: 'Date',
+    label: 'Description',
   },
 
   {
@@ -214,9 +215,11 @@ const ProductTableList = () => {
   //Fetch Products
   React.useEffect(() => {
     dispatch((fetchProducts()));
+    dispatch((fetchCategories()));
   }, [dispatch]);
 
-  const products = useSelector((state) => state.ecommerce?.products || []);
+
+  const {products, categories } = useSelector((state) => state.ecommerce);
   console.log("Productos obtenidos de Redux:", products);
   const formattedProducts = React.useMemo(() => {
     console.log("Productos para formatear:", products);
@@ -227,13 +230,13 @@ const ProductTableList = () => {
       stock: product.stock,
       cost: product.cost,
       description: product.description,
-      category: product.category,
+      category: categories.find((cat) => cat._id === product.category)?.category || 'Categoría desconocida',
       status: product.status,
       discount: product.discount,
       __v: product.__v,
       photo: product.photo || 'ruta_de_imagen_predeterminada',
     }));
-  }, [products]);
+  }, [products, categories]);
   console.log("Productos formateados:", formattedProducts);
 
 
@@ -361,8 +364,8 @@ const ProductTableList = () => {
                         <TableCell>
                           <Box display="flex" alignItems="center">
                             <Avatar
-                              src={row.photo}
-                              alt={row.photo}
+                              src={`http://localhost:4000/images/products/${row._id}.png`}
+                              alt={`http://localhost:4000/images/products/${row._id}.png`}
                               variant="rounded"
                               sx={{ width: 56, height: 56, borderRadius: '100%' }}
                             />
@@ -382,7 +385,7 @@ const ProductTableList = () => {
                         </TableCell>
                         <TableCell>
                           <Typography>
-                            Mon, Oct 28 2024
+                            {row.description}
                           </Typography>
                         </TableCell>
 
