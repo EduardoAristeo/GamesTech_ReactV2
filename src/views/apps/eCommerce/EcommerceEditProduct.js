@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Grid, Stack } from '@mui/material';
+import { Button, Grid, Stack } from '@mui/material';
 
 import Breadcrumb from '../../../layouts/full/shared/breadcrumb/Breadcrumb';
 
@@ -7,14 +7,14 @@ import PageContainer from '../../../components/container/PageContainer';
 
 import GeneralCard from 'src/components/apps/ecommerce/productEdit/GeneralCard';
 import MediaCard from 'src/components/apps/ecommerce/productEdit/Media';
-import VariationCard from 'src/components/apps/ecommerce/productEdit/VariationCard';
+//import VariationCard from 'src/components/apps/ecommerce/productEdit/VariationCard';
 import PricingCard from 'src/components/apps/ecommerce/productEdit/Pricing';
 import Thumbnail from 'src/components/apps/ecommerce/productEdit/Thumbnail';
 import StatusCard from 'src/components/apps/ecommerce/productEdit/Status';
 import ProductDetails from 'src/components/apps/ecommerce/productEdit/ProductDetails';
-import ProductTemplate from 'src/components/apps/ecommerce/productEdit/ProductTemplate';
-import CustomersReviews from 'src/components/apps/ecommerce/productEdit/CustomersReviews';
-import ProductAvgSales from 'src/components/apps/ecommerce/productEdit/ProductAvgSales';
+//import ProductTemplate from 'src/components/apps/ecommerce/productEdit/ProductTemplate';
+//import CustomersReviews from 'src/components/apps/ecommerce/productEdit/CustomersReviews';
+//import ProductAvgSales from 'src/components/apps/ecommerce/productEdit/ProductAvgSales';
 import BlankCard from 'src/components/shared/BlankCard';
 
 const BCrumb = [
@@ -44,15 +44,7 @@ const EcommerceEditProduct = () => {
               </BlankCard>
 
               <BlankCard>
-                <VariationCard />
-              </BlankCard>
-
-              <BlankCard>
                 <PricingCard />
-              </BlankCard>
-
-              <BlankCard>
-                <CustomersReviews />
               </BlankCard>
             </Stack>
           </Grid>
@@ -71,13 +63,6 @@ const EcommerceEditProduct = () => {
                 <ProductDetails />
               </BlankCard>
 
-              <BlankCard>
-                <ProductAvgSales />
-              </BlankCard>
-
-              <BlankCard>
-                <ProductTemplate />
-              </BlankCard>
             </Stack>
           </Grid>
         </Grid>

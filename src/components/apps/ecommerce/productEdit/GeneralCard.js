@@ -37,7 +37,12 @@ const GeneralCard = () => {
           <CustomFormLabel htmlFor="desc">Description</CustomFormLabel>
         </Grid>
         <Grid item xs={12}>
-          <QuillEdit />
+        <CustomTextField
+            id="p_description"
+            placeholder="Product Name"
+            value="Description"
+            fullWidth
+          />
           <Typography variant="body2">
             Set a description to the product for better visibility.
           </Typography>

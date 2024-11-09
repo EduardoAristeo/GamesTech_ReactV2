@@ -56,25 +56,8 @@ const ProductDetails = () => {
           </Button>
         </Grid>
         {/* 1 */}
-        <Grid item xs={12} display="flex" alignItems="center">
-          <CustomFormLabel htmlFor="p_tag">Tags</CustomFormLabel>
-        </Grid>
-        <Grid item xs={12}>
-          <Autocomplete
-            multiple
-            fullWidth
-            id="new-tags"
-            options={new_tags}
-            getOptionLabel={(option) => option.label}
-            defaultValue={[new_tags[1], new_category[2]]}
-            filterSelectedOptions
-            renderInput={(params) => <CustomTextField {...params} placeholder="Tags" />}
-          />
-          {/* <CustomTextField id="p_tag" fullWidth /> */}
-          <Typography variant="body2" mb={2}>
-            Add product to a category.
-          </Typography>
-        </Grid>
+
+        
       </Grid>
     </Box>
   );

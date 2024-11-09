@@ -31,6 +31,7 @@ export const EcommerceSlice = createSlice({
     },
     // GET PRODUCTS
     getProducts: (state, action) => {
+      console.log("Acción getProducts:", action.payload); // Verificar datos en la acción
       state.products = action.payload;
     },
     // GET CATEGORIES
@@ -172,6 +173,7 @@ export const fetchProducts = () => async (dispatch, getState) => {
     const state = getState().ecommerce;
     const params = buildQueryParams(state.filters, state.sortBy, state.productSearch);
     const response = await axios.get(`${API_URL}?${params}`);
+    console.log("Datos obtenidos de la API:", response.data);
     dispatch(getProducts(response.data));
   } catch (error) {
     dispatch(hasError(error));

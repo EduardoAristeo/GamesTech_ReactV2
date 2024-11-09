@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
-import { format } from 'date-fns';
 import {
   Box,
   Table,
@@ -24,12 +23,12 @@ import {
 } from '@mui/material';
 
 import { visuallyHidden } from '@mui/utils';
-
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchProducts } from 'src/store/apps/eCommerce/EcommerceSlice';
 import CustomCheckbox from '../../../forms/theme-elements/CustomCheckbox';
 import CustomSwitch from '../../../forms/theme-elements/CustomSwitch';
-import { IconDotsVertical, IconFilter, IconSearch, IconTrash } from '@tabler/icons';
+import { IconEdit, IconEye, IconFilter, IconSearch, IconTrash } from '@tabler/icons';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -200,6 +199,7 @@ const EnhancedTableToolbar = (props) => {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+
 };
 
 const ProductTableList = () => {
@@ -213,20 +213,39 @@ const ProductTableList = () => {
   const dispatch = useDispatch();
   //Fetch Products
   React.useEffect(() => {
-    dispatch(fetchProducts());
+    dispatch((fetchProducts()));
   }, [dispatch]);
 
-  const getProducts = useSelector((state) => state.ecommerceReducer.products);
+  const products = useSelector((state) => state.ecommerce?.products || []);
+  console.log("Productos obtenidos de Redux:", products);
+  const formattedProducts = React.useMemo(() => {
+    console.log("Productos para formatear:", products);
+    return products.map((product) => ({
+      _id: product._id,
+      title: product.product,
+      price: product.price,
+      stock: product.stock,
+      cost: product.cost,
+      description: product.description,
+      category: product.category,
+      status: product.status,
+      discount: product.discount,
+      __v: product.__v,
+      photo: product.photo || 'ruta_de_imagen_predeterminada',
+    }));
+  }, [products]);
+  console.log("Productos formateados:", formattedProducts);
 
-  const [rows, setRows] = React.useState(getProducts);
+
+  const [rows, setRows] = React.useState(formattedProducts);
   const [search, setSearch] = React.useState('');
 
   React.useEffect(() => {
-    setRows(getProducts);
-  }, [getProducts]);
+    setRows(formattedProducts);
+  }, [formattedProducts]);
 
   const handleSearch = (event) => {
-    const filteredRows = getProducts.filter((row) => {
+    const filteredRows = formattedProducts.filter((row) => {
       return row.title.toLowerCase().includes(event.target.value);
     });
     setSearch(event.target.value);
@@ -362,7 +381,9 @@ const ProductTableList = () => {
                           </Box>
                         </TableCell>
                         <TableCell>
-                          <Typography>{format(new Date(row.created), 'E, MMM d yyyy')}</Typography>
+                          <Typography>
+                            Mon, Oct 28 2024
+                          </Typography>
                         </TableCell>
 
                         <TableCell>
@@ -394,10 +415,33 @@ const ProductTableList = () => {
                             ${row.price}
                           </Typography>
                         </TableCell>
-                        <TableCell>
-                          <Tooltip title="Edit">
-                            <IconButton size="small">
-                              <IconDotsVertical size="1.1rem" />
+                        <TableCell align="center">
+                          <Tooltip title="Edit Invoice">
+                            <IconButton
+                              color="success"
+                              component={Link}
+                              to={`/apps/ecommerce/edit-product/`}
+                            >
+                              <IconEdit width={22} />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="View Invoice">
+                            <IconButton
+                              color="primary"
+                              component={Link}
+                              to={`/apps/ecommerce/edit-product/`}
+                            >
+                              <IconEye width={22} />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Delete Invoice">
+                            <IconButton
+                              color="error"
+                              onClick={() => {
+
+                              }}
+                            >
+                              <IconTrash width={22} />
                             </IconButton>
                           </Tooltip>
                         </TableCell>

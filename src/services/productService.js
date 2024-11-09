@@ -1,4 +1,5 @@
 // services/api.js
+
 export const addProduct = async (productData) => {
     try {
       const response = await fetch('http://localhost:4000/api/v1/products', {
@@ -36,4 +37,25 @@ export const addProduct = async (productData) => {
       throw error;
     }
   };
+  /* List */
+  export const getProducts = async() =>{
+    try {
+      const response = await fetch('http://localhost:4000/api/v1/products', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error al obtener los productos');
+      }
+  
+      return response.json(); // Devuelve los datos de la respuesta
+    } catch (error) {
+      console.error('Error al obtener los productos:', error);
+      throw error; // Propaga el error para manejarlo en el componente
+    }
+  };
+
   
