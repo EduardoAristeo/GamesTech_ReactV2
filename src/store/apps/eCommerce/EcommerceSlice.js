@@ -72,59 +72,63 @@ export const EcommerceSlice = createSlice({
       state.isCartOpen = !state.isCartOpen;
     },
     // ADD TO CART
-addToCart(state, action) {
-  const product = action.payload;
-  // Verificar si el producto ya existe en el carrito
-  const existingProduct = state.cart.find((item) => item._id === product._id);
+    addToCart(state, action) {
+      const product = action.payload;
+      // Verificar si el producto ya existe en el carrito
+      const existingProduct = state.cart.find((item) => item._id === product._id);
 
-  if (existingProduct) {
-    // Si ya existe, aumentar la cantidad
-    existingProduct.qty += 1;
-  } else {
-    // Si no existe, agregarlo con cantidad inicial de 1
-    state.cart.push({ ...product, qty: 1 });
-  }
-},
+      if (existingProduct) {
+        // Si ya existe, aumentar la cantidad
+        existingProduct.qty += 1;
+      } else {
+        // Si no existe, agregarlo con cantidad inicial de 1
+        state.cart.push({ ...product, qty: 1 });
+      }
+    },
 
-    
+
     // DELETE CART
-deleteCart(state, action) {
-  const productId = action.payload;
-  state.cart = state.cart.filter((item) => item._id !== productId); // Usar `_id` en lugar de `id`
-},
+    deleteCart(state, action) {
+      const productId = action.payload;
+      state.cart = state.cart.filter((item) => item._id !== productId); // Usar `_id` en lugar de `id`
+    },
 
-// QTY INCREMENT
-increment(state, action) {
-  const productId = action.payload;
-  const updateCart = map(state.cart, (product) => {
-    if (product._id === productId) {
-      return {
-        ...product,
-        qty: product.qty + 1,
-      };
-    }
-    return product;
-  });
-  state.cart = updateCart;
-},
+    // QTY INCREMENT
+    increment(state, action) {
+      const productId = action.payload;
+      const updateCart = map(state.cart, (product) => {
+        if (product._id === productId) {
+          return {
+            ...product,
+            qty: product.qty + 1,
+          };
+        }
+        return product;
+      });
+      state.cart = updateCart;
+    },
 
-// QTY DECREMENT
-decrement(state, action) {
-  const productId = action.payload;
-  const updateCart = map(state.cart, (product) => {
-    if (product._id === productId) {
-      return {
-        ...product,
-        qty: product.qty - 1,
-      };
-    }
-    return product;
-  });
-  state.cart = updateCart;
-},
+    // QTY DECREMENT
+    decrement(state, action) {
+      const productId = action.payload;
+      const updateCart = map(state.cart, (product) => {
+        if (product._id === productId) {
+          return {
+            ...product,
+            qty: product.qty - 1,
+          };
+        }
+        return product;
+      });
+      state.cart = updateCart;
+    },
 
-
-
+    // DELETE PRODUCT
+    deleteProduct: (state, action) => {
+      const productId = action.payload;
+      state.products = state.products.filter((product) => product._id !== productId);
+    },
+    
   },
 });
 
@@ -143,6 +147,7 @@ export const {
   deleteCart,
   decrement,
   addToCart,
+  deleteProduct,
 } = EcommerceSlice.actions;
 
 // Función para construir los parámetros de consulta en base a los filtros y ordenamiento
@@ -166,6 +171,17 @@ const buildQueryParams = (filters, sortBy, search) => {
   }
   return params.toString();
 };
+
+// Thunk para eliminar un producto desde la API
+export const fetchDeleteProduct = (productId) => async (dispatch) => {
+  try {
+    await axios.delete(`${API_URL}/${productId}`);
+    dispatch(deleteProduct(productId));
+  } catch (error) {
+    dispatch(hasError(error));
+  }
+};
+
 
 // Thunk para obtener productos desde la API con filtros y ordenamientos
 export const fetchProducts = () => async (dispatch, getState) => {
