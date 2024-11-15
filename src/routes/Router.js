@@ -170,11 +170,7 @@ const Router = [
       { path: '/apps/ecommerce/eco-product-list', element: <EcomProductList /> },
       { path: '/apps/ecommerce/eco-checkout', element: <EcomProductCheckout /> },
       { path: '/apps/ecommerce/add-product', element: <EcommerceAddProduct /> },
-<<<<<<< HEAD
-      { path: '/apps/ecommerce/edit-product', element: <EcommerceEditProduct /> },
-=======
       { path: '/apps/ecommerce/edit-product/:id', element: <EcommerceEditProduct /> },
->>>>>>> 1479dc6 (Revert "Revert "solo me falta la categoria y la imagen en la pagina de productEdit"")
       { path: '/apps/ecommerce/detail/:id', element: <EcommerceDetail /> },
       { path: '/apps/kanban', element: <Kanban /> },
       { path: '/apps/invoice/list', element: <InvoiceList /> },
