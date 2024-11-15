@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
-import { format } from 'date-fns';
 import {
   Box,
   Table,
@@ -24,12 +23,13 @@ import {
 } from '@mui/material';
 
 import { visuallyHidden } from '@mui/utils';
-
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchProducts } from 'src/store/apps/eCommerce/EcommerceSlice';
 import CustomCheckbox from '../../../forms/theme-elements/CustomCheckbox';
 import CustomSwitch from '../../../forms/theme-elements/CustomSwitch';
-import { IconDotsVertical, IconFilter, IconSearch, IconTrash } from '@tabler/icons';
+import { IconEdit, IconEye, IconFilter, IconSearch, IconTrash } from '@tabler/icons';
+import { fetchCategories } from '../../../../store/apps/eCommerce/EcommerceSlice';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -68,7 +68,7 @@ const headCells = [
     id: 'pname',
     numeric: false,
     disablePadding: false,
-    label: 'Date',
+    label: 'Description',
   },
 
   {
@@ -214,13 +214,6 @@ const ProductTableList = () => {
   //Fetch Products
   React.useEffect(() => {
     dispatch(fetchProducts());
-<<<<<<< HEAD
-  }, [dispatch]);
-
-  const getProducts = useSelector((state) => state.ecommerceReducer.products);
-
-  const [rows, setRows] = React.useState(getProducts);
-=======
     dispatch(fetchCategories());
   }, [dispatch]);
 
@@ -246,15 +239,14 @@ const ProductTableList = () => {
   console.log('Productos formateados:', formattedProducts);
 
   const [rows, setRows] = React.useState(formattedProducts);
->>>>>>> 1479dc6 (Revert "Revert "solo me falta la categoria y la imagen en la pagina de productEdit"")
   const [search, setSearch] = React.useState('');
 
   React.useEffect(() => {
-    setRows(getProducts);
-  }, [getProducts]);
+    setRows(formattedProducts);
+  }, [formattedProducts]);
 
   const handleSearch = (event) => {
-    const filteredRows = getProducts.filter((row) => {
+    const filteredRows = formattedProducts.filter((row) => {
       return row.title.toLowerCase().includes(event.target.value);
     });
     setSearch(event.target.value);
@@ -370,8 +362,8 @@ const ProductTableList = () => {
                         <TableCell>
                           <Box display="flex" alignItems="center">
                             <Avatar
-                              src={row.photo}
-                              alt={row.photo}
+                              src={`http://localhost:4000/images/products/${row._id}.png`}
+                              alt={`http://localhost:4000/images/products/${row._id}.png`}
                               variant="rounded"
                               sx={{ width: 56, height: 56, borderRadius: '100%' }}
                             />
@@ -390,11 +382,7 @@ const ProductTableList = () => {
                           </Box>
                         </TableCell>
                         <TableCell>
-<<<<<<< HEAD
-                          <Typography>{format(new Date(row.created), 'E, MMM d yyyy')}</Typography>
-=======
                           <Typography>{row.description}</Typography>
->>>>>>> 1479dc6 (Revert "Revert "solo me falta la categoria y la imagen en la pagina de productEdit"")
                         </TableCell>
 
                         <TableCell>
@@ -426,12 +414,6 @@ const ProductTableList = () => {
                             ${row.price}
                           </Typography>
                         </TableCell>
-<<<<<<< HEAD
-                        <TableCell>
-                          <Tooltip title="Edit">
-                            <IconButton size="small">
-                              <IconDotsVertical size="1.1rem" />
-=======
                         <TableCell align="center">
                           <Tooltip title="Edit Invoice">
                             <IconButton
@@ -454,7 +436,6 @@ const ProductTableList = () => {
                           <Tooltip title="Delete Invoice">
                             <IconButton color="error" onClick={() => {}}>
                               <IconTrash width={22} />
->>>>>>> 1479dc6 (Revert "Revert "solo me falta la categoria y la imagen en la pagina de productEdit"")
                             </IconButton>
                           </Tooltip>
                         </TableCell>
