@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import React from 'react';
-=======
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
->>>>>>> 1479dc6 (Revert "Revert "solo me falta la categoria y la imagen en la pagina de productEdit"")
 import Box from '@mui/material/Box';
 import { Grid, Typography, TextField, Autocomplete } from '@mui/material';
 import CustomFormLabel from 'src/components/forms/theme-elements/CustomFormLabel';
@@ -96,61 +92,7 @@ const ProductDetails = ({ value, onChange }) => {
             Selecciona o cambia la categoría del producto.
           </Typography>
         </Grid>
-<<<<<<< HEAD
-
-        {/* Botón para añadir nueva categoría */}
-        <Grid item xs={12}>
-          <Button variant="text" startIcon={<IconPlus size={18} />} onClick={handleAddCategory}>
-            Añadir nueva categoría
-          </Button>
-        </Grid>
-=======
->>>>>>> 1479dc6 (Revert "Revert "solo me falta la categoria y la imagen en la pagina de productEdit"")
       </Grid>
-
-      {/* Dialogo para añadir una nueva categoría */}
-      <Dialog open={openDialog} onClose={handleDialogClose}>
-        <DialogTitle>Añadir Nueva Categoría</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Nombre de la categoría"
-            fullWidth
-            variant="outlined"
-            value={newCategory.category}
-            onChange={(e) => handleNewCategoryChange('category', e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="Descripción de la categoría"
-            fullWidth
-            variant="outlined"
-            value={newCategory.description}
-            onChange={(e) => handleNewCategoryChange('description', e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
-            Cancelar
-          </Button>
-          <Button onClick={handleSaveNewCategory} color="primary">
-            Guardar
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Snackbar para mostrar mensajes de éxito */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
-          Categoría agregada exitosamente
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };
