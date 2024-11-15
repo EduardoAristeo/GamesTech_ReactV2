@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import { format } from 'date-fns';
@@ -214,11 +214,39 @@ const ProductTableList = () => {
   //Fetch Products
   React.useEffect(() => {
     dispatch(fetchProducts());
+<<<<<<< HEAD
   }, [dispatch]);
 
   const getProducts = useSelector((state) => state.ecommerceReducer.products);
 
   const [rows, setRows] = React.useState(getProducts);
+=======
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  const { products, categories } = useSelector((state) => state.ecommerce);
+  console.log('Productos obtenidos de Redux:', products);
+  const formattedProducts = React.useMemo(() => {
+    console.log('Productos para formatear:', products);
+    return products.map((product) => ({
+      _id: product._id,
+      title: product.product,
+      price: product.price,
+      stock: product.stock,
+      cost: product.cost,
+      description: product.description,
+      category:
+        categories.find((cat) => cat._id === product.category)?.category || 'Categoría desconocida',
+      status: product.status,
+      discount: product.discount,
+      __v: product.__v,
+      photo: product.photo || 'ruta_de_imagen_predeterminada',
+    }));
+  }, [products, categories]);
+  console.log('Productos formateados:', formattedProducts);
+
+  const [rows, setRows] = React.useState(formattedProducts);
+>>>>>>> 1479dc6 (Revert "Revert "solo me falta la categoria y la imagen en la pagina de productEdit"")
   const [search, setSearch] = React.useState('');
 
   React.useEffect(() => {
@@ -362,7 +390,11 @@ const ProductTableList = () => {
                           </Box>
                         </TableCell>
                         <TableCell>
+<<<<<<< HEAD
                           <Typography>{format(new Date(row.created), 'E, MMM d yyyy')}</Typography>
+=======
+                          <Typography>{row.description}</Typography>
+>>>>>>> 1479dc6 (Revert "Revert "solo me falta la categoria y la imagen en la pagina de productEdit"")
                         </TableCell>
 
                         <TableCell>
@@ -394,10 +426,35 @@ const ProductTableList = () => {
                             ${row.price}
                           </Typography>
                         </TableCell>
+<<<<<<< HEAD
                         <TableCell>
                           <Tooltip title="Edit">
                             <IconButton size="small">
                               <IconDotsVertical size="1.1rem" />
+=======
+                        <TableCell align="center">
+                          <Tooltip title="Edit Invoice">
+                            <IconButton
+                              color="success"
+                              component={Link}
+                              to={`/apps/ecommerce/edit-product/${row._id}`} // Usamos row._id para obtener el id del producto
+                            >
+                              <IconEdit width={22} />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="View Invoice">
+                            <IconButton
+                              color="primary"
+                              component={Link}
+                              to={`/apps/ecommerce/edit-product/`}
+                            >
+                              <IconEye width={22} />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Delete Invoice">
+                            <IconButton color="error" onClick={() => {}}>
+                              <IconTrash width={22} />
+>>>>>>> 1479dc6 (Revert "Revert "solo me falta la categoria y la imagen en la pagina de productEdit"")
                             </IconButton>
                           </Tooltip>
                         </TableCell>

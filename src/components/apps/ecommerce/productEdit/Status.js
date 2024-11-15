@@ -1,34 +1,59 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import { Grid, Typography } from '@mui/material';
-import { MenuItem, Avatar } from '@mui/material';
+import { Grid, Typography, MenuItem } from '@mui/material';
+import { Avatar } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import CustomSelect from 'src/components/forms/theme-elements/CustomSelect';
+import { getProductById } from '../../../../services/productService'; // Asegúrate de que esta función está definida correctamente
+import { useParams } from 'react-router-dom'; // Para obtener el id de la URL
 
-const StatusCard = () => {
-  const [status, setStatus] = useState(2);
+const StatusCard = ({ onChange }) => {
+  const { id } = useParams(); // Obtener el ID del producto desde la URL
+  const [product, setProduct] = useState(null);
+  const [status, setStatus] = useState(null); // Inicializa en null para indicar "cargando"
+  const [loading, setLoading] = useState(true); // Para manejar el estado de carga
+
   const handleChange = (event) => {
-    setStatus(event.target.value);
-    console.log('test');
+    const newStatus = event.target.value;
+    setStatus(newStatus);
+    onChange(newStatus); // Notifica al componente padre con el nuevo estado seleccionado
   };
+
+  // Hacer la llamada a la API para obtener los datos del producto
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true); // Inicia el indicador de carga
+        const data = await getProductById(id); // Usar el servicio para obtener los datos
+        setProduct(data); // Guardar los datos del producto en el estado
+        setStatus(data.status || 'Oculto'); // Inicializa el estado o 'Oculto' si no está definido
+      } catch (error) {
+        console.error('Error al obtener el producto:', error);
+        setStatus('Oculto'); // Valor predeterminado si hay un error
+      } finally {
+        setLoading(false); // Finaliza el indicador de carga
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return <CircularProgress />; // Indicador de carga mientras espera los datos
+  }
 
   return (
     <Box p={3}>
       <Box display="flex" alignItems="center" justifyContent="space-between">
-        <Typography variant="h5">Status</Typography>
-
+        <Typography variant="h5">Estado</Typography>
         <Avatar
           sx={{
             backgroundColor:
-              status === 0
+              status === 'Publicado'
                 ? 'primary.main'
-                : status === 1
+                : status === 'Oculto'
                 ? 'error.main'
-                : status === 2
-                ? 'secondary.main'
-                : status === 3
-                ? 'warning.main'
-                : 'error.main',
+                : 'warning.main', // Si no es ninguno de los anteriores, lo toma como warning
             '& svg': { display: 'none' },
             width: 15,
             height: 15,
@@ -39,12 +64,13 @@ const StatusCard = () => {
       <Grid container mt={3}>
         <Grid item xs={12}>
           <CustomSelect value={status} onChange={handleChange} fullWidth>
-            <MenuItem value={0}>Published</MenuItem>
-            <MenuItem value={1}>Draft</MenuItem>
-            <MenuItem value={2}>Scheduled</MenuItem>
-            <MenuItem value={3}>In active</MenuItem>
+            <MenuItem value="Publicado">Publicado</MenuItem>
+            <MenuItem value="Oculto">Oculto</MenuItem>
+            {/* Agrega más estados si es necesario */}
           </CustomSelect>
-          <Typography variant="body2">Set the product status.</Typography>
+          <Typography variant="body2">
+            Selecciona si quieres que el producto aparezca en la tienda.
+          </Typography>
         </Grid>
       </Grid>
     </Box>

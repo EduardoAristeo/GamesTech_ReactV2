@@ -1,21 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
 import { Grid } from '@mui/material';
 import CustomFormLabel from 'src/components/forms/theme-elements/CustomFormLabel';
 import CustomTextField from 'src/components/forms/theme-elements/CustomTextField';
-import QuillEdit from 'src/views/forms/quill-editor/QuillEdit';
+import { getProductById } from '../../../../services/productService';
 
-const GeneralCard = () => {
+const EcommerceEditProduct = () => {
+  const { id } = useParams(); // Obtener el ID de la URL
+  const [productData, setProductData] = useState({
+    product: '', // Nombre del producto
+    description: '', // Descripción del producto
+  });
+
+  useEffect(() => {
+    const fetchProductData = async () => {
+      try {
+        const data = await getProductById(id); // Usa el método getProductById
+        setProductData({
+          product: data.product, // Nombre del producto
+          description: data.description, // Descripción del producto
+        });
+      } catch (error) {
+        console.error('Error fetching product data:', error);
+      }
+    };
+
+    fetchProductData();
+  }, [id]);
+
+  // Manejar el cambio de nombre del producto
+  const handleProductChange = (e) => {
+    setProductData({ ...productData, product: e.target.value });
+  };
+
+  // Manejar el cambio de descripción del producto
+  const handleDescriptionChange = (e) => {
+    setProductData({ ...productData, description: e.target.value });
+  };
+
   return (
     <Box p={3}>
-      <Typography variant="h5">General</Typography>
+      <Typography variant="h5">Editar Producto</Typography>
 
       <Grid container mt={3}>
-        {/* 1 */}
+        {/* Nombre del Producto */}
         <Grid item xs={12} display="flex" alignItems="center">
           <CustomFormLabel htmlFor="p_name" sx={{ mt: 0 }}>
-            Product Name{' '}
+            Nombre del Producto{' '}
             <Typography color="error.main" component="span">
               *
             </Typography>
@@ -24,22 +57,34 @@ const GeneralCard = () => {
         <Grid item xs={12}>
           <CustomTextField
             id="p_name"
-            placeholder="Product Name"
-            value="Sample Product"
+            placeholder="Nombre del Producto"
+            value={productData.product} // Valor del campo
             fullWidth
+            onChange={handleProductChange} // Actualizar el estado con el nuevo valor
           />
           <Typography variant="body2">
-            A product name is required and recommended to be unique.
+            Se recomienda que el nombre del producto sea único.
           </Typography>
         </Grid>
 
+        {/* Descripción */}
         <Grid item xs={12} display="flex" alignItems="center">
-          <CustomFormLabel htmlFor="desc">Description</CustomFormLabel>
+          <CustomFormLabel htmlFor="p_description">Descripción</CustomFormLabel>
         </Grid>
         <Grid item xs={12}>
+<<<<<<< HEAD
           <QuillEdit />
+=======
+          <CustomTextField
+            id="p_description"
+            placeholder="Descripción del Producto"
+            value={productData.description} // Valor del campo
+            fullWidth
+            onChange={handleDescriptionChange} // Actualizar el estado con el nuevo valor
+          />
+>>>>>>> 1479dc6 (Revert "Revert "solo me falta la categoria y la imagen en la pagina de productEdit"")
           <Typography variant="body2">
-            Set a description to the product for better visibility.
+            Añade una descripción al producto para mayor visibilidad.
           </Typography>
         </Grid>
       </Grid>
@@ -47,4 +92,4 @@ const GeneralCard = () => {
   );
 };
 
-export default GeneralCard;
+export default EcommerceEditProduct;

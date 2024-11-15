@@ -1,7 +1,20 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
-import { Autocomplete, Button, Grid, Typography, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar, Alert } from '@mui/material';
+import {
+  Autocomplete,
+  Button,
+  Grid,
+  Typography,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Snackbar,
+  Alert,
+} from '@mui/material';
 import CustomFormLabel from 'src/components/forms/theme-elements/CustomFormLabel';
 import { IconPlus } from '@tabler/icons';
 import { getCategories, addCategory } from 'src/services/categoryService';
@@ -17,7 +30,9 @@ const ProductDetails = ({ value, onChange }) => {
     const fetchCategories = async () => {
       try {
         const data = await getCategories();
-        setCategories(data.map((cat) => ({ label: cat.category, id: cat._id, description: cat.description })));
+        setCategories(
+          data.map((cat) => ({ label: cat.category, id: cat._id, description: cat.description })),
+        );
       } catch (error) {
         console.error('Error al cargar categorías:', error);
       }
@@ -29,7 +44,7 @@ const ProductDetails = ({ value, onChange }) => {
   // useEffect para actualizar selectedCategories cuando se cambie el valor de value.category
   useEffect(() => {
     if (value.category) {
-      const selectedCategory = categories.find(cat => cat.id === value.category);
+      const selectedCategory = categories.find((cat) => cat.id === value.category);
       setSelectedCategories(selectedCategory ? [selectedCategory] : []);
     } else {
       setSelectedCategories([]);
@@ -65,7 +80,14 @@ const ProductDetails = ({ value, onChange }) => {
   const handleSaveNewCategory = async () => {
     try {
       const savedCategory = await addCategory(newCategory.category, newCategory.description);
-      setCategories((prev) => [...prev, { label: savedCategory.category, id: savedCategory._id, description: savedCategory.description }]);
+      setCategories((prev) => [
+        ...prev,
+        {
+          label: savedCategory.category,
+          id: savedCategory._id,
+          description: savedCategory.description,
+        },
+      ]);
       handleDialogClose();
       setSnackbarOpen(true);
     } catch (error) {

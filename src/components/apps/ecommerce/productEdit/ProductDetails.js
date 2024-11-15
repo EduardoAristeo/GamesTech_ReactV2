@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import React from 'react';
+=======
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+>>>>>>> 1479dc6 (Revert "Revert "solo me falta la categoria y la imagen en la pagina de productEdit"")
 import Box from '@mui/material/Box';
 import { Grid, Typography, TextField, Autocomplete } from '@mui/material';
 import CustomFormLabel from 'src/components/forms/theme-elements/CustomFormLabel';
@@ -67,17 +72,18 @@ const ProductDetails = ({ value, onChange }) => {
 
   return (
     <Box p={3}>
-      <Typography variant="h5">Product Details</Typography>
+      <Typography variant="h5">Detalles del producto</Typography>
       <Grid container mt={3}>
-        {/* 1 */}
+        {/* Campo de Categoría */}
         <Grid item xs={12} display="flex" alignItems="center">
           <CustomFormLabel htmlFor="p_cat" sx={{ mt: 0 }}>
-            Categories
+            Categoría
           </CustomFormLabel>
         </Grid>
         <Grid item xs={12}>
           <Autocomplete
-            multiple
+            value={selectedCategory} // El valor de la categoría seleccionada
+            onChange={handleCategoryChange} // Llamada a la función para manejar el cambio
             fullWidth
             id="new-category"
             options={categories}
@@ -87,9 +93,10 @@ const ProductDetails = ({ value, onChange }) => {
             )}
           />
           <Typography variant="body2" mb={2}>
-            Add product to a category.
+            Selecciona o cambia la categoría del producto.
           </Typography>
         </Grid>
+<<<<<<< HEAD
 
         {/* Botón para añadir nueva categoría */}
         <Grid item xs={12}>
@@ -97,6 +104,8 @@ const ProductDetails = ({ value, onChange }) => {
             Añadir nueva categoría
           </Button>
         </Grid>
+=======
+>>>>>>> 1479dc6 (Revert "Revert "solo me falta la categoria y la imagen en la pagina de productEdit"")
       </Grid>
 
       {/* Dialogo para añadir una nueva categoría */}
@@ -144,6 +153,14 @@ const ProductDetails = ({ value, onChange }) => {
       </Snackbar>
     </Box>
   );
+};
+
+// PropTypes para validar las props
+ProductDetails.propTypes = {
+  value: PropTypes.shape({
+    _id: PropTypes.string.isRequired, // El producto debe tener un _id
+  }).isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default ProductDetails;
