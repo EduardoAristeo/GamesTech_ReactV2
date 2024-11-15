@@ -72,9 +72,6 @@ const EcommerceEditProduct = () => {
           <CustomFormLabel htmlFor="p_description">Descripción</CustomFormLabel>
         </Grid>
         <Grid item xs={12}>
-<<<<<<< HEAD
-          <QuillEdit />
-=======
           <CustomTextField
             id="p_description"
             placeholder="Descripción del Producto"
@@ -82,7 +79,6 @@ const EcommerceEditProduct = () => {
             fullWidth
             onChange={handleDescriptionChange} // Actualizar el estado con el nuevo valor
           />
->>>>>>> 1479dc6 (Revert "Revert "solo me falta la categoria y la imagen en la pagina de productEdit"")
           <Typography variant="body2">
             Añade una descripción al producto para mayor visibilidad.
           </Typography>
