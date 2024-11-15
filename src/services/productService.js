@@ -35,5 +35,76 @@ export const addProduct = async (productData) => {
       console.error('Error al subir la imagen:', error);
       throw error;
     }
+<<<<<<< Updated upstream
   };
   
+=======
+
+    return response.json(); // Devuelve los datos de la respuesta
+  } catch (error) {
+    console.error('Error al obtener los productos:', error);
+    throw error; // Propaga el error para manejarlo en el componente
+  }
+};
+
+export const getProductById = async (productId) => {
+  try {
+    const response = await fetch(`http://localhost:4000/api/v1/products/${productId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al obtener el producto');
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Error al obtener el producto:', error);
+    throw error;
+  }
+};
+export const updateProduct = async (productId, updatedData) => {
+  try {
+    const response = await fetch(`http://localhost:4000/api/v1/products/${productId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al actualizar el producto');
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Error al actualizar el producto:', error);
+    throw error;
+  }
+};
+// services/api.js
+
+export const getCategories = async () => {
+  try {
+    const response = await fetch('http://localhost:4000/api/v1/categories', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al obtener las categorías');
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Error al obtener las categorías:', error);
+    throw error;
+  }
+};
+>>>>>>> Stashed changes
