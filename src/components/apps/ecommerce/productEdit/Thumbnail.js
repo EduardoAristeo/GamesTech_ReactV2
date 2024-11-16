@@ -1,12 +1,14 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useRef } from 'react';
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
 
-import img4 from 'src/assets/images/blog/blog-img1.jpg';
-
-const Thumbnail = () => {
-  const [imageFile, setImageFile] = useState(null);
-  const [imageUrl, setImageUrl] = useState(img4);
+// eslint-disable-next-line react/prop-types
+const Thumbnail = ({ productId }) => {
+  const [setImageFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState(
+    `http://localhost:4000/imagenes/products/${productId}.png`,
+  );
   const fileInputRef = useRef(null);
 
   // Open file input dialog on image click
@@ -52,7 +54,7 @@ const Thumbnail = () => {
           <Box>
             <img
               src={imageUrl}
-              alt="Preview"
+              alt="Product"
               onClick={handleImageClick}
               style={{ maxWidth: '300px', borderRadius: '7px', margin: '0 auto' }}
             />
