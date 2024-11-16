@@ -203,6 +203,7 @@ const ProductDetails = ({ value, onChange }) => {
           Categoría agregada exitosamente
         </Alert>
       </Snackbar>
+
     </Box>
   );
 };

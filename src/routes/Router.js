@@ -171,6 +171,7 @@ const Router = [
       { path: '/apps/ecommerce/eco-checkout', element: <EcomProductCheckout /> },
       { path: '/apps/ecommerce/add-product', element: <EcommerceAddProduct /> },
       { path: '/apps/ecommerce/edit-product/:id', element: <EcommerceEditProduct /> },
+
       { path: '/apps/ecommerce/detail/:id', element: <EcommerceDetail /> },
       { path: '/apps/kanban', element: <Kanban /> },
       { path: '/apps/invoice/list', element: <InvoiceList /> },

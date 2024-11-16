@@ -1,0 +1,24 @@
+@media print {
+    body {
+      margin: 0;
+      padding: 0;
+      font-size: 12px;
+    }
+  
+    * {
+      box-shadow: none !important;
+    }
+  
+    .MuiBox-root {
+      width: 100%;
+      max-width: 58mm; /* Asegúrate de usar el ancho del papel */
+      margin: 0;
+      padding: 0;
+    }
+  
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  

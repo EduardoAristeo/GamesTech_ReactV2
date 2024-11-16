@@ -20,16 +20,23 @@ import {
   TextField,
   InputAdornment,
   Paper,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+  MenuItem
 } from '@mui/material';
 
 import { visuallyHidden } from '@mui/utils';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchProducts } from 'src/store/apps/eCommerce/EcommerceSlice';
+import { fetchProducts, fetchCategories, fetchDeleteProduct } from 'src/store/apps/eCommerce/EcommerceSlice';
 import CustomCheckbox from '../../../forms/theme-elements/CustomCheckbox';
 import CustomSwitch from '../../../forms/theme-elements/CustomSwitch';
 import { IconEdit, IconEye, IconFilter, IconSearch, IconTrash } from '@tabler/icons';
-import { fetchCategories } from '../../../../store/apps/eCommerce/EcommerceSlice';
+
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -59,13 +66,13 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'name',
+    id: 'title',
     numeric: false,
     disablePadding: false,
-    label: 'Products',
+    label: 'Producto',
   },
   {
-    id: 'pname',
+    id: 'description',
     numeric: false,
     disablePadding: false,
     label: 'Description',
@@ -81,13 +88,13 @@ const headCells = [
     id: 'price',
     numeric: false,
     disablePadding: false,
-    label: 'Price',
+    label: 'Precio',
   },
   {
     id: 'action',
     numeric: false,
     disablePadding: false,
-    label: 'Action',
+    label: 'Accción',
   },
 ];
 
@@ -145,8 +152,8 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const EnhancedTableToolbar = (props) => {
-  const { numSelected, handleSearch, search } = props;
+const EnhancedTableToolbar = (props) => { 
+  const { numSelected, handleSearch, search, handleFilterClick, handleDeleteSelected } = props;
 
   return (
     <Toolbar
@@ -161,7 +168,7 @@ const EnhancedTableToolbar = (props) => {
     >
       {numSelected > 0 ? (
         <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle2" component="div">
-          {numSelected} selected
+          Seleccionados {numSelected}
         </Typography>
       ) : (
         <Box sx={{ flex: '1 1 100%' }}>
@@ -173,7 +180,7 @@ const EnhancedTableToolbar = (props) => {
                 </InputAdornment>
               ),
             }}
-            placeholder="Search Product"
+            placeholder="Buscar Producto"
             size="small"
             onChange={handleSearch}
             value={search}
@@ -183,13 +190,13 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={handleDeleteSelected}>
             <IconTrash width="18" />
           </IconButton>
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
-          <IconButton>
+          <IconButton onClick={handleFilterClick}>
             <IconFilter size="1.2rem" icon="filter" />
           </IconButton>
         </Tooltip>
@@ -200,27 +207,102 @@ const EnhancedTableToolbar = (props) => {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  handleSearch: PropTypes.func.isRequired,
+  search: PropTypes.string.isRequired,
+  handleFilterClick: PropTypes.func.isRequired,
+  handleDeleteSelected: PropTypes.func.isRequired,
 };
 
 const ProductTableList = () => {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('title');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  // Estados y funciones para el diálogo de confirmación
+  const [open, setOpen] = React.useState(false);
+  const [productIdToDelete, setProductIdToDelete] = React.useState(null);
+  // Estados y funciones para el dialogo de Delete de varios productos
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const [productsToDelete, setProductsToDelete] = React.useState([]);
 
   const dispatch = useDispatch();
+  // Estados para los filtros 
+  const [filters, setFilters] = React.useState({
+    category: 'All',
+    priceRange: null, // { min: 0, max: 1000 } 
+    status: 'All',
+  });
+
+  const handleFilterChange = (event) => {
+    const { name, value } = event.target;
+    setFilters({
+      ...filters,
+      [name]: value,
+    });
+  };
+
+  const handlePriceRangeChange = (min, max) => {
+    setFilters({
+      ...filters,
+      priceRange: { min, max },
+    });
+  };
+
+  const handleClickOpen = (productId) => {
+    setProductIdToDelete(productId);
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleDelete = () => {
+    dispatch(fetchDeleteProduct(productIdToDelete));
+    setOpen(false);
+  };
+
+  // Estados y funciones para el diálogo de filtros 
+  const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
+  const handleFilterDialogOpen = () => {
+    setFilterDialogOpen(true);
+  };
+
+  const handleFilterDialogClose = () => {
+    setFilterDialogOpen(false);
+  };
+
+  const handleDeleteSelected = () => {
+    const selectedProducts = rows.filter((row) => selected.includes(row.title));
+    setProductsToDelete(selectedProducts);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const handleDeleteConfirmed = () => {
+    productsToDelete.forEach((product) => {
+      dispatch(fetchDeleteProduct(product._id));
+    });
+    setDeleteDialogOpen(false);
+    setSelected([]);
+  };
+
   //Fetch Products
   React.useEffect(() => {
-    dispatch(fetchProducts());
-    dispatch(fetchCategories());
+
+    dispatch((fetchProducts()));
+    dispatch((fetchCategories()));
   }, [dispatch]);
 
+
   const { products, categories } = useSelector((state) => state.ecommerce);
-  console.log('Productos obtenidos de Redux:', products);
+  //console.log("Productos obtenidos de Redux:", products);
   const formattedProducts = React.useMemo(() => {
-    console.log('Productos para formatear:', products);
+    //console.log("Productos para formatear:", products);
     return products.map((product) => ({
       _id: product._id,
       title: product.product,
@@ -228,15 +310,16 @@ const ProductTableList = () => {
       stock: product.stock,
       cost: product.cost,
       description: product.description,
-      category:
-        categories.find((cat) => cat._id === product.category)?.category || 'Categoría desconocida',
+
+      category: categories.find((cat) => cat._id === product.category)?.category || 'Categoría desconocida',
       status: product.status,
       discount: product.discount,
       __v: product.__v,
-      photo: product.photo || 'ruta_de_imagen_predeterminada',
+      photo: `http://localhost:4000/images/products/${product._id}.png` || '',
     }));
   }, [products, categories]);
-  console.log('Productos formateados:', formattedProducts);
+  //console.log("Productos formateados:", formattedProducts);
+
 
   const [rows, setRows] = React.useState(formattedProducts);
   const [search, setSearch] = React.useState('');
@@ -309,6 +392,23 @@ const ProductTableList = () => {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
+  const filteredRows = rows.filter((row) => {
+    let isMatch = true;
+    if (filters.category !== 'All' && row.category !== filters.category) {
+      isMatch = false;
+    }
+    if (filters.priceRange && (row.price < filters.priceRange.min || row.price > filters.priceRange.max)) {
+      isMatch = false;
+    }
+    if (filters.status !== 'All') {
+      const stockStatus = row.stock ? 'InStock' : 'OutOfStock';
+      if (filters.status !== stockStatus) {
+        isMatch = false;
+      }
+    }
+    return isMatch;
+  });
+
   return (
     <Box>
       <Box>
@@ -316,6 +416,8 @@ const ProductTableList = () => {
           numSelected={selected.length}
           search={search}
           handleSearch={(event) => handleSearch(event)}
+          handleFilterClick={handleFilterDialogOpen}
+          handleDeleteSelected={handleDeleteSelected}
         />
         <Paper variant="outlined" sx={{ mx: 2, mt: 1 }}>
           <TableContainer>
@@ -333,7 +435,7 @@ const ProductTableList = () => {
                 rowCount={rows.length}
               />
               <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(filteredRows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.title);
@@ -381,8 +483,11 @@ const ProductTableList = () => {
                             </Box>
                           </Box>
                         </TableCell>
-                        <TableCell>
-                          <Typography>{row.description}</Typography>
+
+                        <TableCell sx={{ maxWidth: 350, wordWrap: 'break-word', whiteSpace: 'normal' }}>
+                          <Typography noWrap>
+                            {row.description}
+                          </Typography>
                         </TableCell>
 
                         <TableCell>
@@ -424,17 +529,22 @@ const ProductTableList = () => {
                               <IconEdit width={22} />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="View Invoice">
+
+                          <Tooltip title="Ver detalles del producto">
                             <IconButton
                               color="primary"
                               component={Link}
-                              to={`/apps/ecommerce/edit-product/`}
+                              to={`/apps/ecommerce/detail/${row._id}`}
                             >
                               <IconEye width={22} />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Delete Invoice">
-                            <IconButton color="error" onClick={() => {}}>
+
+                          <Tooltip title="Eliminar producto">
+                            <IconButton
+                              color="error"
+                              onClick={() => handleClickOpen(row._id)}
+                            >
                               <IconTrash width={22} />
                             </IconButton>
                           </Tooltip>
@@ -471,6 +581,113 @@ const ProductTableList = () => {
           />
         </Box>
       </Box>
+      {/* Diálogo de confirmación para eliminar un producto */}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Confirmar Eliminación"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            ¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleDelete} color="error" autoFocus>
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* Diálogo de filtros */}
+      <Dialog open={filterDialogOpen} onClose={handleFilterDialogClose} aria-labelledby="filter-dialog-title">
+        <DialogTitle id="filter-dialog-title">
+          Filtro de Productos
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Usa esta opcion para filtrar tus productos
+          </DialogContentText>
+          <Box sx={{ mt: 2 }}>
+            <TextField select
+              label="Categoria"
+              name="category"
+              value={filters.category}
+              onChange={handleFilterChange} fullWidth
+            >
+              <MenuItem value="All">Todo</MenuItem>
+              {categories.map((category) => (
+                <MenuItem key={category._id} value={category.category}>{category.category}</MenuItem>
+              ))}
+            </TextField>
+            <TextField label="Precio minimo"
+              type="number"
+              value={filters.priceRange?.min || ''}
+              onChange={(e) => handlePriceRangeChange(e.target.value, filters.priceRange?.max || '')}
+              fullWidth
+              sx={{ mt: 2 }}
+            />
+            <TextField
+              label="Precio Maximo"
+              type="number"
+              value={filters.priceRange?.max || ''}
+              onChange={(e) => handlePriceRangeChange(filters.priceRange?.min || '', e.target.value)}
+              fullWidth sx={{ mt: 2 }}
+            />
+            <TextField
+              select
+              label="Status"
+              name="status"
+              value={filters.status}
+              onChange={handleFilterChange}
+              fullWidth sx={{ mt: 2 }}
+            >
+              <MenuItem value="All">Todo</MenuItem>
+              <MenuItem value="InStock">En Stock</MenuItem>
+              <MenuItem value="OutOfStock">Sin Stock</MenuItem>
+            </TextField>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleFilterDialogClose} color="primary">Cancelar</Button>
+          <Button onClick={handleFilterDialogClose} color="primary">Aplicar</Button>
+        </DialogActions>
+      </Dialog>
+      {/* Diálogo de confirmación para eliminar productos seleccionados */}
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleDeleteDialogClose}
+        aria-labelledby="delete-dialog-title"
+        aria-describedby="delete-dialog-description"
+      >
+        <DialogTitle id="delete-dialog-title">
+          {"Confirmar Eliminación"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="delete-dialog-description">
+            ¿Estás seguro de que deseas eliminar los siguientes productos? Esta acción no se puede deshacer.
+          </DialogContentText>
+          <ul>
+            {productsToDelete.map((product) => (
+              <li key={product._id}>{product.title}</li>
+            ))}
+          </ul>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteDialogClose} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleDeleteConfirmed} color="error" autoFocus>
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

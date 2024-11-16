@@ -1,97 +1,49 @@
 import React from 'react';
 import { Box, Grid, Paper, Radio, Stack, Typography } from '@mui/material';
-import Paypal from 'src/assets/images/svgs/paypal.svg';
-import payment from 'src/assets/images/products/payment.svg';
-import mastercard from 'src/assets/images/svgs/mastercard.svg';
-
-const Delivery = [
-  {
-    id: 1,
-    title: 'Free delivery',
-    description: 'Delivered on Firday, May 10',
-  },
-  {
-    id: 2,
-    title: 'Fast delivery ($2,00)',
-    description: 'Delivered on Wednesday, May 8',
-  },
-];
+import payment from 'src/assets/images/products/payment-complete.gif';
+import terminal from 'src/assets/images/iconos/terminal-bancaria.png';
+import cash from 'src/assets/images/iconos/dinero.png';
+import transfer from 'src/assets/images/iconos/transferencia-movil.png';
 
 const Payment = [
   {
-    value: 'paypal',
-    title: 'Pay with Paypal',
-    description: 'You will be redirected to PayPal website to complete your purchase securely.',
-    icons: Paypal,
+    value: 'efectivo',
+    title: 'Pago con Efectivo',
+    description: 'El cliente pagará en total en efectivo',
+    icons: cash,
   },
   {
-    value: 'credit_card',
-    title: 'Credit / Debit Card',
-    description: 'We support Mastercard, Visa, Discover and Stripe.',
-    icons: mastercard,
+    value: 'tarjeta',
+    title: 'Tarjeta Debito / Credito',
+    description: 'El cliente pagará con tarjeta de débito o crédito',
+    icons: terminal,
   },
   {
-    value: 'cash',
-    title: 'Cash on Delivery',
-    description: 'Pay with cash when your order is delivered.',
-    icons: '',
+    value: 'transferencia',
+    title: 'Transferencia Bancaria',
+    description: 'El cliente pagará con transferencia bancaria',
+    icons: transfer,
   },
 ];
 
-const ThirdStep = () => {
-  const [selectedValue, setSelectedValue] = React.useState('Free delivery');
-
-  const handleDChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
-  const [selectedPyament, setSelectedPyament] = React.useState('paypal');
+const ThirdStep = ({ setPaymentMethod }) => {
+  const [selectedPayment, setSelectedPayment] = React.useState('efectivo'); // Predeterminado: efectivo
 
   const handlePChange = (event) => {
-    setSelectedPyament(event.target.value);
+    const value = event.target.value;
+    setSelectedPayment(value);
+    setPaymentMethod(value); // Actualizar el método de pago en el padre
   };
 
   return (
     <>
       {/* ------------------------------------------- */}
-      {/* Delivery Option */}
-      {/* ------------------------------------------- */}
-      <Paper variant="outlined" sx={{ p: 3, mt: 4 }}>
-        <Typography variant="h6">Delivery Option</Typography>
-        <Grid container spacing={3} mt={1}>
-          {Delivery.map((option) => (
-            <Grid item lg={6} xs={12} key={option.id}>
-              <Paper
-                variant="outlined"
-                sx={{
-                  p: 2,
-                  borderColor: selectedValue === option.title ? 'primary.main' : '',
-                  backgroundColor: selectedValue === option.title ? 'primary.light' : '',
-                }}
-              >
-                <Stack direction={'row'} alignItems="center" gap={1}>
-                  <Radio
-                    checked={selectedValue === option.title}
-                    onChange={handleDChange}
-                    value={option.title}
-                    name="radio-buttons"
-                    inputProps={{ 'aria-label': option.title }}
-                  />
-                  <Box>
-                    <Typography variant="h6">{option.title}</Typography>
-                    <Typography variant="subtitle2">{option.description}</Typography>
-                  </Box>
-                </Stack>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
-      </Paper>
-      {/* ------------------------------------------- */}
       {/* Payment Option */}
       {/* ------------------------------------------- */}
       <Paper variant="outlined" sx={{ p: 3, mt: 4 }}>
-        <Typography variant="h6">Payment Option</Typography>
+        <Typography variant="h6">Método de pago</Typography>
         <Grid container spacing={3} alignItems="center">
+          {/* Opciones de método de pago */}
           <Grid lg={8} xs={12} item>
             <Grid container spacing={3} mt={2}>
               {Payment.map((option) => (
@@ -100,13 +52,13 @@ const ThirdStep = () => {
                     variant="outlined"
                     sx={{
                       p: 2,
-                      borderColor: selectedPyament === option.value ? 'primary.main' : '',
-                      backgroundColor: selectedPyament === option.value ? 'primary.light' : '',
+                      borderColor: selectedPayment === option.value ? 'primary.main' : '',
+                      backgroundColor: selectedPayment === option.value ? 'primary.light' : '',
                     }}
                   >
                     <Stack direction={'row'} alignItems="center" gap={1}>
                       <Radio
-                        checked={selectedPyament === option.value}
+                        checked={selectedPayment === option.value}
                         onChange={handlePChange}
                         value={option.value}
                         name="radio-buttons"
@@ -125,6 +77,7 @@ const ThirdStep = () => {
               ))}
             </Grid>
           </Grid>
+          {/* Imagen del GIF */}
           <Grid lg={4} xs={12} item>
             <Box sx={{ width: { xs: '200px', sm: 'auto' } }}>
               <img src={payment} alt="payment" />

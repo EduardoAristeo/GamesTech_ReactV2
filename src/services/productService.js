@@ -97,3 +97,4 @@ export const updateProduct = async (productId, updatedData) => {
     throw error;
   }
 };
+

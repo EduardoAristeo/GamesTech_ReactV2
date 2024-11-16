@@ -1,6 +1,7 @@
 // PricingCard.js
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
+
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
 import { Grid } from '@mui/material';
@@ -53,6 +54,9 @@ const PricingCard = () => {
     setFinalPrice(cost - newDiscount); // Recalcular el precio final
   };
 
+
+
+
   const handleStockChange = (event) => setStock(Number(event.target.value));
 
   return (
@@ -65,6 +69,7 @@ const PricingCard = () => {
         {/* Campo 1: Precio de costo */}
         <Grid item xs={12}>
           <CustomFormLabel htmlFor="p_cost" sx={{ mt: 0 }}>
+
             Costo{' '}
             <Typography color="error.main" component="span">
               *
@@ -102,6 +107,7 @@ const PricingCard = () => {
         <Grid item xs={12}>
           <CustomFormLabel htmlFor="p_final_price" sx={{ mt: 0 }}>
             Precio Final{' '}
+
             <Typography color="error.main" component="span">
               *
             </Typography>
@@ -120,6 +126,7 @@ const PricingCard = () => {
         <Grid item xs={12}>
           <CustomFormLabel htmlFor="p_stock" sx={{ mt: 0 }}>
             Stock{' '}
+
             <Typography color="error.main" component="span">
               *
             </Typography>
@@ -132,6 +139,7 @@ const PricingCard = () => {
             fullWidth
           />
           <Typography variant="body2">Cantidad disponible del producto.</Typography>
+
         </Grid>
       </Grid>
     </Box>
