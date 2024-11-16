@@ -1,36 +1,46 @@
-import React from 'react';
+// eslint-disable-next-line no-unused-vars
+import React, { useState, useRef, useEffect } from 'react';
 import { sum } from 'lodash';
-import { Box, Stack, Typography, Button } from '@mui/material';
+import { Box, Stack, Typography, Button, Modal } from '@mui/material';
 import AddToCart from '../productCart/AddToCart';
 import { IconArrowBack } from '@tabler/icons';
-import { useSelector } from 'react-redux';
-import jsPDF from 'jspdf';
+import { useSelector,useDispatch  } from 'react-redux';
+import { useNavigate } from 'react-router-dom'; // Importar useNavigate
 import HorizontalStepper from './HorizontalStepper';
-import FirstStep from './FirstStep';
 import ThirdStep from './ThirdStep';
 import FinalStep from './FinalStep';
+import LogoGamesTech from 'src/assets/images/iconos/logo_negro.png';
+import {clearCart} from '/src/store/apps/eCommerce/EcommerceSlice.js'
 
 const ProductCheckout = () => {
   const checkout = useSelector((state) => state.ecommerce.cart);
-  const steps = ['Cart', 'Payment'];
-  const [activeStep, setActiveStep] = React.useState(0);
+  const steps = ['Carrito', 'Pago'];
+  const [activeStep, setActiveStep] = useState(0);
+  const [showTicket, setShowTicket] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('efectivo'); // Estado para el método de pago
+  const ticketRef = useRef();
+  const [originalContent] = useState('');
+  const dispatch = useDispatch(); // Hook para usar las acciones de Redux
+  const navigate = useNavigate(); // Hook para navegación
+  
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+  useEffect(() => {
+    // Escuchar el evento onafterprint para restaurar el DOM
+    const handleAfterPrint = () => {
+      document.body.innerHTML = originalContent;
+    };
+    window.addEventListener('afterprint', handleAfterPrint);
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+    return () => {
+      window.removeEventListener('afterprint', handleAfterPrint);
+    };
+  }, [originalContent]);
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+  const handleNext = () => setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  const handleBack = () => setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  const handleReset = () => setActiveStep(0);
 
-  // Calcular el total sin aplicar descuentos
   const subtotal = sum(checkout.map((product) => product.price * (product.qty || 1)));
-
-  // Calcular el total aplicando los descuentos
   const totalWithDiscounts = sum(
     checkout.map((product) => {
       const discount = product.discount ? product.discount / 100 : 0;
@@ -39,32 +49,160 @@ const ProductCheckout = () => {
     })
   );
 
-  const generatePDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(12);
-    doc.text('Ticket de Venta', 20, 20);
+  const handlePrint = () => {
+  const printWindow = window.open('', '_blank'); // Abrir nueva ventana
+  const ticketContent = ticketRef.current.innerHTML; // Obtener el contenido del ticket
+  const styles = Array.from(document.styleSheets) // Obtener estilos de la página actual
+    .map((styleSheet) => {
+      try {
+        return Array.from(styleSheet.cssRules)
+          .map((rule) => rule.cssText)
+          .join('\n');
+      } catch (e) {
+        console.error('Error al cargar estilos:', e);
+        return '';
+      }
+    })
+    .join('\n');
 
-    doc.setFontSize(10);
-    doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 20, 30);
-    doc.text('Detalles de los productos:', 20, 40);
+  if (printWindow) {
+    printWindow.document.open();
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Imprimir Ticket</title>
+          <style>
+            ${styles} /* Insertar estilos globales */
+            body {
+              margin: 0;
+              padding: 0;
+              font-family: Arial, sans-serif;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            .ticket {
+              width: 300px; /* Ancho del ticket */
+              font-size: 14px; /* Tamaño de fuente global */
+              line-height: 1.2; /* Espaciado entre líneas */
+              padding: 10px;
+              border: 1px solid transparent;
+              box-sizing: border-box;
+            }
+            img {
+              max-width: 100%;
+              height: auto;
+            }
+            .ticket h5,
+            .ticket h6,
+            .ticket p {
+              margin: 0;
+              padding: 0;
+            }
+          </style>
+        </head>
+        <body onload="window.print(); window.close();">
+          <div class="ticket">${ticketContent}</div>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  }
+};
 
-    let yOffset = 50;
-    checkout.forEach((product, index) => {
-      const discount = product.discount ? product.discount / 100 : 0;
-      const discountedPrice = product.price - product.price * discount;
-      const lineTotal = discountedPrice * (product.qty || 1);
-
-      doc.text(
-        `${index + 1}. ${product.product} - ${product.qty || 1} x $${discountedPrice.toFixed(2)} = $${lineTotal.toFixed(2)}`,
-        20,
-        yOffset
-      );
-      yOffset += 10;
-    });
-
-    doc.text(`Total: $${totalWithDiscounts.toFixed(2)}`, 20, yOffset + 10);
-    doc.save('ticket.pdf');
+   // Vaciar carrito y redirigir
+   const handleCancel = () => {
+    dispatch(clearCart()); // Vaciar el carrito
+    navigate('/apps/ecommerce/shop'); // Redirigir a la página de productos
   };
+
+  const SaleSummary = () => (
+    <Box mt={4} p={3} border="1px solid #e0e0e0" borderRadius="8px">
+      <Typography variant="h6" gutterBottom>
+        Resumen de venta
+      </Typography>
+      <Stack direction="row" justifyContent="space-between" mb={2}>
+        <Typography variant="body1">Sub Total</Typography>
+        <Typography variant="body1">${subtotal.toFixed(2)}</Typography>
+      </Stack>
+      <Stack direction="row" justifyContent="space-between" mb={2}>
+        <Typography variant="body1">Precio con descuentos</Typography>
+        <Typography variant="body1" color="primary">
+          ${totalWithDiscounts.toFixed(2)}
+        </Typography>
+      </Stack>
+    </Box>
+  );
+
+  const Ticket = () => (
+    <Box ref={ticketRef} sx={{ width: '300px', lineHeight: '1.5', padding: '0px' }}>
+      {/* Logo */}
+      <Box textAlign="center" mb={1}>
+        <img
+          src={LogoGamesTech}
+          alt="Logo"
+          style={{ width: '90px', height: '90px' }}
+        />
+      </Box>
+      <Typography variant="h5" textAlign="center" sx={{ fontFamily: 'Arial', lineHeight: '1' }}>
+        <strong>GamesTech</strong>
+      </Typography>
+      <Typography variant="h5" textAlign="center" sx={{ fontFamily: 'Arial', lineHeight: '1' }}>
+        <strong>Celaya</strong>
+      </Typography>
+      <Typography pt={1} textAlign="center" sx={{ fontFamily: 'Arial', fontSize: '8px', lineHeight: '1' }}>
+        Sucursal Celaya - Av. Alameda #516B Colonia Alameda Celaya, GTO. 411-144-0579
+      </Typography>
+      <Typography pt={1} variant="subtitle2" textAlign="center" sx={{ fontFamily: 'Arial', lineHeight: '1' }}>
+        <strong>Ticket de Venta</strong>
+      </Typography>
+      <Typography textAlign="center" sx={{ fontFamily: 'Arial', fontSize: '10px', lineHeight: '1' }}>
+        Fecha: {new Date().toLocaleDateString()}
+      </Typography>
+      {/* Mostrar el método de pago */}
+      <Typography textAlign="center" sx={{ fontFamily: 'Arial', fontSize: '10px', lineHeight: '1', mt: 1 }}>
+        Método de Pago: <strong>{paymentMethod.toUpperCase()}</strong>
+      </Typography>
+
+      <Box pt={2}>
+        {checkout.map((product, index) => {
+          const discount = product.discount ? product.discount / 100 : 0;
+          const discountedPrice = product.price - product.price * discount;
+          const lineTotal = discountedPrice * (product.qty || 1);
+          return (
+            <Box key={index} mb={0.5}>
+              <Typography textAlign="center" sx={{ fontFamily: 'Arial', fontSize: '12px', lineHeight: '1' }}>
+                {index + 1}. {product.product}
+              </Typography>
+              <Typography textAlign="center" sx={{ fontFamily: 'Arial', fontSize: '12px', lineHeight: '1' }}>
+                {product.qty || 1} x ${discountedPrice.toFixed(2)} = ${lineTotal.toFixed(2)}
+              </Typography>
+              {/* Línea de separación */}
+              <Typography textAlign="center" sx={{ fontFamily: 'Arial', fontSize: '12px', lineHeight: '1' }}>
+                ------------------
+              </Typography>
+            </Box>
+          );
+        })}
+      </Box>
+
+      <Box borderTop="1px dashed #000" pt={2}>
+        <Typography variant="subtitle2" textAlign="center" sx={{ fontFamily: 'Arial', lineHeight: '1' }}>Subtotal: ${subtotal.toFixed(2)}</Typography>
+        <Typography variant="subtitle2" textAlign="center" sx={{ fontFamily: 'Arial', lineHeight: '1' }}>Total (c/desc): ${totalWithDiscounts.toFixed(2)}</Typography>
+      </Box>
+      <Typography pt={1} textAlign="center" sx={{ fontFamily: 'Arial', fontSize: '8px', lineHeight: '1' }}>
+        Politicas de garantía
+      </Typography>
+      <Typography textAlign="justify" sx={{ fontFamily: 'Arial', fontSize: '8px', lineHeight: '1' }}>
+        Revisar su producto antes de salir de la tienda, en caso de que su producto falle 
+        en el tiempo de garantía es necesario traer su ticket de compra asi como el producto en su empaque original 
+        en buen estado, no hay garantía en productos mojados, rotos, golpeados o con daño fisico.
+      </Typography>
+      <Typography pt={1} variant="subtitle2" textAlign="center" sx={{ fontFamily: 'Arial', lineHeight: '1' }}>
+        ¡Gracias por su compra, eres el/la mejor! 😊
+      </Typography>
+    </Box>
+  );
 
   return (
     <Box>
@@ -74,84 +212,74 @@ const ProductCheckout = () => {
         activeStep={activeStep}
         finalStep={<FinalStep />}
       >
-        {/* ------------------------------------------- */}
-        {/* Step1 - Cart */}
-        {/* ------------------------------------------- */}
         {activeStep === 0 ? (
           <>
             <Box my={3}>
               <AddToCart />
             </Box>
-            {checkout.length > 0 ? (
+            {checkout.length > 0 && (
               <>
-                {/* ------------------------------------------- */}
-                {/* Cart Total */}
-                {/* ------------------------------------------- */}
-                <Box mt={4} p={3} border="1px solid #e0e0e0" borderRadius="8px">
-                  <Typography variant="h6" gutterBottom>
-                    Rsumen de venta
-                  </Typography>
-                  <Stack direction="row" justifyContent="space-between" mb={2}>
-                    <Typography variant="body1">Sub Total</Typography>
-                    <Typography variant="body1">${subtotal.toFixed(2)}</Typography>
-                  </Stack>
-                  <Stack direction="row" justifyContent="space-between" mb={2}>
-                    <Typography variant="body1">Precio con descuentos</Typography>
-                    <Typography variant="body1" color="error">
-                      ${totalWithDiscounts.toFixed(2)}
-                    </Typography>
-                  </Stack>
-                </Box>
-                <Stack direction={'row'} justifyContent="space-between" mt={4}>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                  >
-                    Back
+                <SaleSummary />
+                <Stack direction="row" justifyContent="space-between" mt={4}>
+                  <Button color="inherit" variant="contained" onClick={handleBack}>
+                    Regresar
                   </Button>
                   <Button variant="contained" onClick={handleNext}>
-                    Proceed to Payment
+                    Proceder al Pago
                   </Button>
                 </Stack>
               </>
-            ) : (
-              ''
             )}
           </>
         ) : activeStep === 1 ? (
           <>
-            {/* ------------------------------------------- */}
-            {/* Step2 - Payment */}
-            {/* ------------------------------------------- */}
-            <ThirdStep />
-            <Box mt={4} p={3} border="1px solid #e0e0e0" borderRadius="8px">
-              <Typography variant="h6" gutterBottom>
-                Order Summary
-              </Typography>
-              <Stack direction="row" justifyContent="space-between" mb={2}>
-                <Typography variant="body1">Sub Total</Typography>
-                <Typography variant="body1">${subtotal.toFixed(2)}</Typography>
-              </Stack>
-              <Stack direction="row" justifyContent="space-between" mb={2}>
-                <Typography variant="body1">Precio con descuentos</Typography>
-                <Typography variant="body1" color="primary">
-                  ${totalWithDiscounts.toFixed(2)}
-                </Typography>
-              </Stack>
-            </Box>
-            <Stack direction={'row'} justifyContent="space-between" mt={4}>
+            <ThirdStep setPaymentMethod={setPaymentMethod} />
+            <SaleSummary />
+            <Stack direction="row" justifyContent="space-between" mt={4}>
               <Button color="inherit" disabled={activeStep === 0} onClick={handleBack}>
-                <IconArrowBack /> Back
+                <IconArrowBack /> Regresar
               </Button>
-              <Button onClick={generatePDF} size="large" variant="contained" color="primary">
-                Complete Order & Generate Ticket
+              <Button
+                size="large"
+                variant="contained"
+                color="primary"
+                onClick={() => setShowTicket(true)}
+              >
+                Generar Ticket
               </Button>
             </Stack>
           </>
         ) : null}
       </HorizontalStepper>
+
+      {/* Modal para el ticket */}
+      <Modal open={showTicket} onClose={() => setShowTicket(false)}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'white',
+            p: 2,
+            borderRadius: '8px',
+            boxShadow: 24,
+            maxWidth: '300px',
+          }}
+        >
+          <Ticket />
+          <Stack direction="row" justifyContent="space-between" mt={3}>
+            <Button variant="outlined" onClick={() =>
+              setShowTicket(false) || handleCancel()
+            }>
+              Cancelar
+            </Button>
+            <Button variant="contained" color="primary" onClick={handlePrint}>
+              Imprimir
+            </Button>
+          </Stack>
+        </Box>
+      </Modal>
     </Box>
   );
 };

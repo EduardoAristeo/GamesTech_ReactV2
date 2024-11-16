@@ -71,6 +71,9 @@ export const EcommerceSlice = createSlice({
     toggleCart(state) {
       state.isCartOpen = !state.isCartOpen;
     },
+    clearCart(state) {
+      state.cart = []; // Vaciar el carrito
+    },
     // ADD TO CART
     addToCart(state, action) {
       const product = action.payload;
@@ -148,8 +151,7 @@ export const {
   decrement,
   addToCart,
   deleteProduct,
-} = EcommerceSlice.actions;
-
+  clearCart,
 // Función para construir los parámetros de consulta en base a los filtros y ordenamiento
 const buildQueryParams = (filters, sortBy, search) => {
   const params = new URLSearchParams();

@@ -1,10 +1,12 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { Grid, Typography, Box, Breadcrumbs, Link } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
-import breadcrumbImg from 'src/assets/images/breadcrumb/ChatBc.png';
+import breadcrumbImg from 'src/assets/images/breadcrumb/logo.png';
 import { IconCircle } from '@tabler/icons';
 
+// eslint-disable-next-line react/prop-types
 const Breadcrumb = ({ subtitle, items, title, children }) => (
   <Grid
     container
@@ -35,6 +37,7 @@ const Breadcrumb = ({ subtitle, items, title, children }) => (
         aria-label="breadcrumb"
       >
         {items
+          // eslint-disable-next-line react/prop-types
           ? items.map((item) => (
               <div key={item.title}>
                 {item.to ? (
@@ -63,7 +66,7 @@ const Breadcrumb = ({ subtitle, items, title, children }) => (
         ) : (
           <>
             <Box sx={{ top: '0px', position: 'absolute' }}>
-              <img src={breadcrumbImg} alt={breadcrumbImg} width={'165px'} />
+              <img src={breadcrumbImg} alt={breadcrumbImg} width={'115px'} />
             </Box>
           </>
         )}
