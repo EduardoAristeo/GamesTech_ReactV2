@@ -1,4 +1,4 @@
-import  { lazy } from 'react';
+import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import Loadable from '../layouts/full/shared/loadable/Loadable';
@@ -9,7 +9,9 @@ const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')))
 
 /* ****Pages***** */
 const ModernDash = Loadable(lazy(() => import('../views/dashboard/Modern')));
-const RecepcionistaHome = Loadable(lazy(() => import('../views/dashboard/Modern_recepcionistahome')));
+const RecepcionistaHome = Loadable(
+  lazy(() => import('../views/dashboard/Modern_recepcionistahome')),
+);
 const EcommerceDash = Loadable(lazy(() => import('../views/dashboard/Ecommerce')));
 
 /* ****Apps***** */
@@ -23,8 +25,12 @@ const Tickets = Loadable(lazy(() => import('../views/apps/tickets/Tickets')));
 const Contacts = Loadable(lazy(() => import('../views/apps/contacts/Contacts')));
 const Ecommerce = Loadable(lazy(() => import('../views/apps/eCommerce/Ecommerce')));
 const EcommerceDetail = Loadable(lazy(() => import('../views/apps/eCommerce/EcommerceDetail')));
-const EcommerceAddProduct = Loadable(lazy(() => import('../views/apps/eCommerce/EcommerceAddProduct')));
-const EcommerceEditProduct = Loadable(lazy(() => import('../views/apps/eCommerce/EcommerceEditProduct')));
+const EcommerceAddProduct = Loadable(
+  lazy(() => import('../views/apps/eCommerce/EcommerceAddProduct')),
+);
+const EcommerceEditProduct = Loadable(
+  lazy(() => import('../views/apps/eCommerce/EcommerceEditProduct')),
+);
 const EcomProductList = Loadable(lazy(() => import('../views/apps/eCommerce/EcomProductList')));
 const EcomProductCheckout = Loadable(
   lazy(() => import('../views/apps/eCommerce/EcommerceCheckout')),
@@ -164,7 +170,8 @@ const Router = [
       { path: '/apps/ecommerce/eco-product-list', element: <EcomProductList /> },
       { path: '/apps/ecommerce/eco-checkout', element: <EcomProductCheckout /> },
       { path: '/apps/ecommerce/add-product', element: <EcommerceAddProduct /> },
-      { path: '/apps/ecommerce/edit-product/', element: <EcommerceEditProduct /> },
+      { path: '/apps/ecommerce/edit-product/:id', element: <EcommerceEditProduct /> },
+
       { path: '/apps/ecommerce/detail/:id', element: <EcommerceDetail /> },
       { path: '/apps/kanban', element: <Kanban /> },
       { path: '/apps/invoice/list', element: <InvoiceList /> },

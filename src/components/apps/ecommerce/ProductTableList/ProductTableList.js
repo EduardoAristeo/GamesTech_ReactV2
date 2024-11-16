@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import {
@@ -38,7 +38,6 @@ import CustomSwitch from '../../../forms/theme-elements/CustomSwitch';
 import { IconEdit, IconEye, IconFilter, IconSearch, IconTrash } from '@tabler/icons';
 
 
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -76,7 +75,7 @@ const headCells = [
     id: 'description',
     numeric: false,
     disablePadding: false,
-    label: 'Descripción',
+    label: 'Description',
   },
 
   {
@@ -294,6 +293,7 @@ const ProductTableList = () => {
 
   //Fetch Products
   React.useEffect(() => {
+
     dispatch((fetchProducts()));
     dispatch((fetchCategories()));
   }, [dispatch]);
@@ -310,6 +310,7 @@ const ProductTableList = () => {
       stock: product.stock,
       cost: product.cost,
       description: product.description,
+
       category: categories.find((cat) => cat._id === product.category)?.category || 'Categoría desconocida',
       status: product.status,
       discount: product.discount,
@@ -463,8 +464,8 @@ const ProductTableList = () => {
                         <TableCell>
                           <Box display="flex" alignItems="center">
                             <Avatar
-                              src={row.photo}
-                              alt={row.photo}
+                              src={`http://localhost:4000/images/products/${row._id}.png`}
+                              alt={`http://localhost:4000/images/products/${row._id}.png`}
                               variant="rounded"
                               sx={{ width: 56, height: 56, borderRadius: '100%' }}
                             />
@@ -482,6 +483,7 @@ const ProductTableList = () => {
                             </Box>
                           </Box>
                         </TableCell>
+
                         <TableCell sx={{ maxWidth: 350, wordWrap: 'break-word', whiteSpace: 'normal' }}>
                           <Typography noWrap>
                             {row.description}
@@ -518,15 +520,16 @@ const ProductTableList = () => {
                           </Typography>
                         </TableCell>
                         <TableCell align="center">
-                          <Tooltip title="Editar producto">
+                          <Tooltip title="Edit Invoice">
                             <IconButton
                               color="success"
                               component={Link}
-                              to={`/apps/ecommerce/edit-product/`}
+                              to={`/apps/ecommerce/edit-product/${row._id}`} // Usamos row._id para obtener el id del producto
                             >
                               <IconEdit width={22} />
                             </IconButton>
                           </Tooltip>
+
                           <Tooltip title="Ver detalles del producto">
                             <IconButton
                               color="primary"
@@ -536,6 +539,7 @@ const ProductTableList = () => {
                               <IconEye width={22} />
                             </IconButton>
                           </Tooltip>
+
                           <Tooltip title="Eliminar producto">
                             <IconButton
                               color="error"

@@ -25,14 +25,12 @@ const Menuitems = [
     href: '/recepcion',
     chip: 'New',
     chipColor: 'secondary',
-    
-
   },
   {
     id: uniqueId(),
     title: 'Ingresar dispositivo',
     icon: IconPlus,
-    href: '/recepcion/ingresar-dispositivo',//generar una nueva ruta para ingresar dispositivo
+    href: '/recepcion/ingresar-dispositivo', //generar una nueva ruta para ingresar dispositivo
   },
   {
     id: uniqueId(),
@@ -51,22 +49,21 @@ const Menuitems = [
         title: 'Dispositivos',
         icon: IconPoint,
         href: '/dashboards/ecommerce', //generar una nueva ruta para dispositivos
-      }
-    ]
+      },
+    ],
   },
-  
+
   {
     navlabel: true,
     subheader: 'Herramientas',
   },
-  
 
   {
     id: uniqueId(),
     title: 'Inventario',
     icon: IconBasket,
     href: '/apps/ecommerce/',
-    
+
     children: [
       {
         id: uniqueId(),
@@ -80,15 +77,14 @@ const Menuitems = [
         icon: IconPoint,
         href: '/apps/ecommerce/add-product',
       },
-      {
+      /* {
         id: uniqueId(),
         title: 'Edit Product',
         icon: IconPoint,
         href: '/apps/ecommerce/edit-product',
-      },
+      },*/
     ],
   },
-  
   {
     id: uniqueId(),
     title: 'Pedidos',
@@ -107,10 +103,9 @@ const Menuitems = [
         icon: IconPoint,
         href: '/apps/invoice/create',
       },
-      
     ],
   },
-  
+
   {
     id: uniqueId(),
     title: 'Notes',
@@ -129,7 +124,6 @@ const Menuitems = [
     icon: IconUserCircle,
     href: '/pages/account-settings',
   },
-  
 ];
 
 export default Menuitems;
