@@ -152,6 +152,7 @@ export const {
   addToCart,
   deleteProduct,
   clearCart,
+} = EcommerceSlice.actions;
 // Función para construir los parámetros de consulta en base a los filtros y ordenamiento
 const buildQueryParams = (filters, sortBy, search) => {
   const params = new URLSearchParams();

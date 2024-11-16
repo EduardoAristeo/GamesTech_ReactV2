@@ -1,18 +1,11 @@
-
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import { Button, Grid, Stack } from '@mui/material';
 import GeneralCard from 'src/components/apps/ecommerce/productEdit/GeneralCard';
-//import VariationCard from 'src/components/apps/ecommerce/productEdit/VariationCard';
 import PricingCard from 'src/components/apps/ecommerce/productEdit/Pricing';
 import Thumbnail from 'src/components/apps/ecommerce/productEdit/Thumbnail';
 import StatusCard from 'src/components/apps/ecommerce/productEdit/Status';
 import ProductDetails from 'src/components/apps/ecommerce/productEdit/ProductDetails';
-
-import ProductTemplate from 'src/components/apps/ecommerce/productEdit/ProductTemplate';
-import CustomersReviews from 'src/components/apps/ecommerce/productEdit/CustomersReviews';
-import ProductAvgSales from 'src/components/apps/ecommerce/productEdit/ProductAvgSales';
-
-import BlankCard from 'src/components/shared/BlankCard';
 import { updateProduct, uploadImage } from '../../../services/productService';
 
 const EcommerceEditProduct = () => {
@@ -97,44 +90,23 @@ const EcommerceEditProduct = () => {
     }
   };
   return (
-    <PageContainer title="Edit Product" description="this is Edit Product page">
-      {/* breadcrumb */}
-      <Breadcrumb title="Edit Product" items={BCrumb} />
-      <form>
-        <Grid container spacing={3}>
-          <Grid item lg={8}>
-            <Stack spacing={3}>
-              <BlankCard>
-                <GeneralCard />
-              </BlankCard>
-
-              <BlankCard>
-                <MediaCard />
-              </BlankCard>
-
-              <BlankCard>
-                <PricingCard />
-              </BlankCard>
-            </Stack>
-          </Grid>
-
-          <Grid item lg={4}>
-            <Stack spacing={3}>
-              <BlankCard>
-                <Thumbnail />
-              </BlankCard>
-
-              <BlankCard>
-                <StatusCard />
-              </BlankCard>
-
-              <BlankCard>
-                <ProductDetails />
-              </BlankCard>
-
-            </Stack>
-          </Grid>
-
+    <form onSubmit={handleSubmit}>
+      <Grid container spacing={3}>
+        <Grid item lg={8}>
+          <Stack spacing={3}>
+            <GeneralCard
+              value={{ product: productData.product, description: productData.description }} // Pasar name y description juntos
+              onChange={handleChange}
+            />
+            <PricingCard
+              value={{
+                cost: productData.cost,
+                price: productData.price,
+                discount: productData.discount,
+              }} // Pasar cost y price juntos
+              onChange={handleChange}
+            />
+          </Stack>
         </Grid>
         <Grid item lg={4}>
           <Stack spacing={3}>
