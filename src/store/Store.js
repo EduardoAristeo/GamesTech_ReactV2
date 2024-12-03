@@ -8,6 +8,7 @@ import ContactsReducer from './apps/contacts/ContactSlice';
 import EcommerceReducer from './apps/eCommerce/EcommerceSlice';
 import UserProfileReducer from './apps/userProfile/UserProfileSlice';
 import BlogReducer from './apps/blog/BlogSlice';
+import ventasReducer from './apps/ventas/VentaSlice';
 
 export const store = configureStore({
   reducer: {
@@ -20,5 +21,6 @@ export const store = configureStore({
     ecommerce: EcommerceReducer,
     user: UserProfileReducer, // Cambiado a 'user' para que coincida con el selector
     blogReducer: BlogReducer,
+    ventas: ventasReducer,
   },
 });

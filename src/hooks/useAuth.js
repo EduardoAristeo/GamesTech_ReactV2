@@ -8,20 +8,21 @@ import { setUser } from '../store/apps/userProfile/UserProfileSlice'; // Ajusta 
 export const useAuth = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Inicializar useDispatch
+  const dispatch = useDispatch(); 
 
   const login = async (user, password) => {
     setLoading(true);
     try {
       const response = await loginUser(user, password);
       if (response.status === 200) {
+        const { token, user: userData } = response.data;
+        localStorage.setItem('token', token); // Almacena el token
+        
+        dispatch(setUser(userData)); // Actualiza el estado de Redux con los datos del usuario
+  
         toast.success('Inicio de sesión exitoso');
-        const userData = response.data; // Obtén todos los datos del usuario desde la respuesta
-
-        // Despachar la acción para guardar al usuario en Redux
-        dispatch(setUser(userData));
-
-        // Redirigir según el departamento
+        
+        // Redirección basada en el departamento
         switch (userData.department) {
           case 'admin':
             navigate('/dashboards/ecommerce');
@@ -33,22 +34,19 @@ export const useAuth = () => {
             navigate('/recepcion');
             break;
           default:
-            navigate('/'); // Redirigir a una ruta por defecto si el departamento no coincide
+            navigate('/');
             break;
         }
       }
     } catch (err) {
-      if (err.response && err.response.status === 401) {
-        toast.error('Contraseña incorrecta');
-      } else if (err.response && err.response.status === 404) {
-        toast.error('Usuario no encontrado');
-      } else {
-        toast.error('Error al iniciar sesión. Por favor, intenta de nuevo.');
-      }
+      console.error('Error en el login:', err);
+      toast.error('Error al iniciar sesión');
     } finally {
       setLoading(false);
     }
   };
+  
+  
 
   return { login, loading };
 };

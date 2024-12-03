@@ -8,6 +8,11 @@ import {
   IconListDetails,
   IconHome,
   IconPlus,
+
+  IconBrandApple,
+  IconTools,
+
+  IconCircuitCell,
 } from '@tabler/icons';
 
 import { uniqueId } from 'lodash';
@@ -20,23 +25,35 @@ const Menuitems = [
 
   {
     id: uniqueId(),
-    title: 'Inicio',
+    title: 'Inicio Recepcion',
     icon: IconHome,
     href: '/recepcion',
-    chip: 'New',
+    
     chipColor: 'secondary',
+    roles: ['recepcion'],
   },
   {
     id: uniqueId(),
-    title: 'Ingresar dispositivo',
+    title: 'Inicio Tecnico',
+    icon: IconHome,
+    href: '/tecnico',
+    
+    chipColor: 'secondary',
+    roles: ['tecnico'],
+  },
+  {
+    id: uniqueId(),
+    roles: ['recepcion'], // Agregar roles para filtr
+    title: 'Ingresar reparación',
     icon: IconPlus,
-    href: '/recepcion/ingresar-dispositivo', //generar una nueva ruta para ingresar dispositivo
+    href: '/recepcion/agregar-reparacion', //generar una nueva ruta para ingresar dispositivo
   },
   {
     id: uniqueId(),
     title: 'Vender',
     icon: IconShoppingCart,
     href: '/dashboards/ecommerce',
+    roles: ['recepcion'], // Agregar roles para filtrar elementos del menú
     children: [
       {
         id: uniqueId(),
@@ -60,29 +77,101 @@ const Menuitems = [
 
   {
     id: uniqueId(),
-    title: 'Inventario',
+    title: 'Productos',
     icon: IconBasket,
     href: '/apps/ecommerce/',
+    roles: ['recepcion'],
+    
 
     children: [
       {
         id: uniqueId(),
-        title: 'List',
+        title: 'Productos',
         icon: IconPoint,
-        href: '/apps/ecommerce/eco-product-list',
+        href: '/recepcion/lista-productos',
       },
       {
         id: uniqueId(),
-        title: 'Add Product',
+        title: 'Ventas realizadas',
         icon: IconPoint,
-        href: '/apps/ecommerce/add-product',
+        href: '/apps/ventas/ventas-list',
+
       },
-      /* {
+      {
         id: uniqueId(),
-        title: 'Edit Product',
+        title: 'Reportes de ventas',
         icon: IconPoint,
-        href: '/apps/ecommerce/edit-product',
-      },*/
+        href: '/recepcion/reporte-ventas',
+      },
+      
+    ],
+  },
+  {
+    id: uniqueId(),
+    title: 'Reparaciones',
+    icon: IconTools,
+    href: '/',
+
+    children: [
+      {
+        id: uniqueId(),
+        title: 'Lista de reparaciones',
+        icon: IconPoint,
+        href: '/recepcion/lista-reparaciones', //editar la ruta para reparaciones
+      },
+      {
+        id: uniqueId(),
+        title: 'Reportes de reparaciones',
+        icon: IconPoint,
+        roles: ['recepcion'],
+        href: '/recepcion/reporte-reparaciones', //editar la ruta para nueva reparacion
+      },
+      
+    ],
+  },
+  {
+    id: uniqueId(),
+    title: 'Dispositivos',
+    icon: IconBrandApple,
+    href: '/',
+    roles: ['recepcion'],
+
+    children: [
+      {
+        id: uniqueId(),
+        title: 'Lista de dispositivos',
+        icon: IconPoint,
+       // href: '/apps/ecommerce/eco-product-list', //editar la ruta para dispositivos
+      },
+      {
+        id: uniqueId(),
+        title: 'Nuevo dispositivo',
+        icon: IconPoint,
+        //href: '/apps/ecommerce/add-product', //editar la ruta para nuevo dispositivo
+      },
+      
+    ],
+  },
+  {
+    id: uniqueId(),
+    title: 'Refacciones',
+    icon: IconCircuitCell,
+    href: '/',
+
+    children: [
+      {
+        id: uniqueId(),
+        title: 'Lista de refacciones',
+        icon: IconPoint,
+       // href: '/apps/ecommerce/eco-product-list', //editar la ruta para refacciones
+      },
+      {
+        id: uniqueId(),
+        title: 'Nueva refaccion',
+        icon: IconPoint,
+       // href: '/apps/ecommerce/add-product', //editar la ruta para nueva refaccion
+      },
+      
     ],
   },
   {

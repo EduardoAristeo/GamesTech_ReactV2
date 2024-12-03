@@ -6,11 +6,15 @@ import Loadable from '../layouts/full/shared/loadable/Loadable';
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
 const BlankLayout = Loadable(lazy(() => import('../layouts/blank/BlankLayout')));
+const ReparacionSearch = Loadable(lazy(() => import('src/components/frontend-pages/about/ReparacionSearch.js')));
 
 /* ****Pages***** */
 const ModernDash = Loadable(lazy(() => import('../views/dashboard/Modern')));
 const RecepcionistaHome = Loadable(
   lazy(() => import('../views/dashboard/Modern_recepcionistahome')),
+);
+const TecnicoHome = Loadable(
+  lazy(() => import('../views/dashboard/Modern_tecnicohome')),
 );
 const EcommerceDash = Loadable(lazy(() => import('../views/dashboard/Ecommerce')));
 
@@ -28,13 +32,21 @@ const EcommerceDetail = Loadable(lazy(() => import('../views/apps/eCommerce/Ecom
 const EcommerceAddProduct = Loadable(
   lazy(() => import('../views/apps/eCommerce/EcommerceAddProduct')),
 );
+const ReparacionAddReparacion = Loadable(
+  lazy(() => import('../views/apps/reparacion/AddReparacion')),
+);
 const EcommerceEditProduct = Loadable(
   lazy(() => import('../views/apps/eCommerce/EcommerceEditProduct')),
 );
 const EcomProductList = Loadable(lazy(() => import('../views/apps/eCommerce/EcomProductList')));
+const ReparacionesList = Loadable(lazy(() => import('../views/apps/reparacion/ReparacionList')));
+const ProductVentas = Loadable(lazy(() => import('../views/apps/ventas/VentasList')));
 const EcomProductCheckout = Loadable(
   lazy(() => import('../views/apps/eCommerce/EcommerceCheckout')),
 );
+
+const VentasReporte = Loadable(lazy(() => import('../views/apps/ventas/VentasReporte')));
+const ReparacionesReporte = Loadable(lazy(() => import('../views/apps/reparacion/ReparacionesReporte')));
 
 const InvoiceList = Loadable(lazy(() => import('../views/apps/invoice/List')));
 const InvoiceCreate = Loadable(lazy(() => import('../views/apps/invoice/Create')));
@@ -159,6 +171,7 @@ const Router = [
       { path: '/', element: <Navigate to="/auth/login2" /> },
       { path: '/dashboards/modern', exact: true, element: <ModernDash /> },
       { path: '/recepcion', exact: true, element: <RecepcionistaHome /> },
+      { path: '/tecnico', exact: true, element: <TecnicoHome /> },
       { path: '/dashboards/ecommerce', exact: true, element: <EcommerceDash /> },
       { path: '/apps/chats', element: <Chats /> },
       { path: '/apps/notes', element: <Notes /> },
@@ -167,11 +180,16 @@ const Router = [
       { path: '/apps/tickets', element: <Tickets /> },
       { path: '/apps/contacts', element: <Contacts /> },
       { path: '/apps/ecommerce/shop', element: <Ecommerce /> },
-      { path: '/apps/ecommerce/eco-product-list', element: <EcomProductList /> },
+      { path: '/recepcion/lista-productos', element: <EcomProductList /> },
+      { path: '/recepcion/lista-reparaciones', element: <ReparacionesList/> },
+      { path: '/apps/ventas/ventas-list', element: <ProductVentas /> },
       { path: '/apps/ecommerce/eco-checkout', element: <EcomProductCheckout /> },
-      { path: '/apps/ecommerce/add-product', element: <EcommerceAddProduct /> },
+      { path: '/recepcion/agregar-producto', element: <EcommerceAddProduct /> },
+      {path: '/recepcion/agregar-reparacion', element: <ReparacionAddReparacion />},
+      {path : '/recepcion/reporte-ventas', element: <VentasReporte/>},
+      {path : '/recepcion/reporte-reparaciones', element: <ReparacionesReporte/>},
       { path: '/apps/ecommerce/edit-product/:id', element: <EcommerceEditProduct /> },
-
+      {path: '/buscar-reparacion', element: <ReparacionSearch/>},
       { path: '/apps/ecommerce/detail/:id', element: <EcommerceDetail /> },
       { path: '/apps/kanban', element: <Kanban /> },
       { path: '/apps/invoice/list', element: <InvoiceList /> },

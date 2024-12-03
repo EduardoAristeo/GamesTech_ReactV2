@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
+import StockProgressBar from './progressBar';
+
 import {
   Box,
   Table,
@@ -37,6 +39,12 @@ import CustomCheckbox from '../../../forms/theme-elements/CustomCheckbox';
 import CustomSwitch from '../../../forms/theme-elements/CustomSwitch';
 import { IconEdit, IconEye, IconFilter, IconSearch, IconTrash } from '@tabler/icons';
 
+import { useNavigate } from 'react-router-dom';
+
+
+
+
+  
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -75,14 +83,13 @@ const headCells = [
     id: 'description',
     numeric: false,
     disablePadding: false,
-    label: 'Description',
+    label: 'Descripción',
   },
-
   {
     id: 'status',
     numeric: false,
     disablePadding: false,
-    label: 'Status',
+    label: 'Stock',
   },
   {
     id: 'price',
@@ -91,12 +98,20 @@ const headCells = [
     label: 'Precio',
   },
   {
+    id: 'discount',
+    numeric: false,
+    disablePadding: false,
+    label: 'Descuento', // Nueva columna para el porcentaje de descuento
+  },
+  {
     id: 'action',
     numeric: false,
     disablePadding: false,
-    label: 'Accción',
+    label: 'Acción',
   },
 ];
+
+
 
 function EnhancedTableHead(props) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
@@ -152,8 +167,14 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const EnhancedTableToolbar = (props) => { 
+const EnhancedTableToolbar = (props) => {
   const { numSelected, handleSearch, search, handleFilterClick, handleDeleteSelected } = props;
+
+  const navigate = useNavigate();
+
+  const handleAddProduct = () => {
+    navigate('/recepcion/agregar-producto');
+  }
 
   return (
     <Toolbar
@@ -171,21 +192,31 @@ const EnhancedTableToolbar = (props) => {
           Seleccionados {numSelected}
         </Typography>
       ) : (
-        <Box sx={{ flex: '1 1 100%' }}>
-          <TextField
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <IconSearch size="1.1rem" />
-                </InputAdornment>
-              ),
-            }}
-            placeholder="Buscar Producto"
-            size="small"
-            onChange={handleSearch}
-            value={search}
-          />
-        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
+        <TextField
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <IconSearch size="1.1rem" />
+              </InputAdornment>
+            ),
+          }}
+          placeholder="Buscar Producto"
+          size="small"
+          onChange={handleSearch}
+          value={search}
+          sx={{ flex: 1 }} // Permite que el buscador ocupe más espacio
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleAddProduct}
+          sx={{ textTransform: 'none', ml: 70 }} // Agrega margen izquierdo al botón
+        >
+          Agregar Producto
+        </Button>
+      </Box>
+      
       )}
 
       {numSelected > 0 ? (
@@ -214,6 +245,8 @@ EnhancedTableToolbar.propTypes = {
 };
 
 const ProductTableList = () => {
+  
+  
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('title');
   const [selected, setSelected] = React.useState([]);
@@ -435,133 +468,115 @@ const ProductTableList = () => {
                 rowCount={rows.length}
               />
               <TableBody>
-                {stableSort(filteredRows, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(row.title);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+  {stableSort(filteredRows, getComparator(order, orderBy))
+    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    .map((row, index) => {
+      const isItemSelected = isSelected(row.title);
+      const labelId = `enhanced-table-checkbox-${index}`;
 
-                    return (
-                      <TableRow
-                        hover
-                        onClick={(event) => handleClick(event, row.title)}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.title}
-                        selected={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <CustomCheckbox
-                            color="primary"
-                            checked={isItemSelected}
-                            inputprops={{
-                              'aria-labelledby': labelId,
-                            }}
-                          />
-                        </TableCell>
+      return (
+        <TableRow
+          hover
+          onClick={(event) => handleClick(event, row.title)}
+          role="checkbox"
+          aria-checked={isItemSelected}
+          tabIndex={-1}
+          key={row.title}
+          selected={isItemSelected}
+        >
+          <TableCell padding="checkbox">
+            <CustomCheckbox
+              color="primary"
+              checked={isItemSelected}
+              inputprops={{
+                'aria-labelledby': labelId,
+              }}
+            />
+          </TableCell>
 
-                        <TableCell>
-                          <Box display="flex" alignItems="center">
-                            <Avatar
-                              src={`http://localhost:4000/images/products/${row._id}.png`}
-                              alt={`http://localhost:4000/images/products/${row._id}.png`}
-                              variant="rounded"
-                              sx={{ width: 56, height: 56, borderRadius: '100%' }}
-                            />
-                            <Box
-                              sx={{
-                                ml: 2,
-                              }}
-                            >
-                              <Typography variant="h6" fontWeight="600">
-                                {row.title}
-                              </Typography>
-                              <Typography color="textSecondary" variant="subtitle2">
-                                {row.category}
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </TableCell>
+          <TableCell>
+            <Box display="flex" alignItems="center">
+              <Avatar
+                src={`http://localhost:4000/images/products/${row._id}.png`}
+                alt={`http://localhost:4000/images/products/${row._id}.png`}
+                variant="rounded"
+                sx={{ width: 56, height: 56, borderRadius: '100%' }}
+              />
+              <Box
+                sx={{
+                  ml: 2,
+                }}
+              >
+                <Typography variant="h6" fontWeight="600">
+                  {row.title}
+                </Typography>
+                <Typography color="textSecondary" variant="subtitle2">
+                  {row.category}
+                </Typography>
+              </Box>
+            </Box>
+          </TableCell>
 
-                        <TableCell sx={{ maxWidth: 350, wordWrap: 'break-word', whiteSpace: 'normal' }}>
-                          <Typography noWrap>
-                            {row.description}
-                          </Typography>
-                        </TableCell>
+          <TableCell sx={{ maxWidth: 350, wordWrap: 'break-word', whiteSpace: 'normal' }}>
+            <Typography noWrap>
+              {row.description}
+            </Typography>
+          </TableCell>
 
-                        <TableCell>
-                          <Box display="flex" alignItems="center">
-                            <Box
-                              sx={{
-                                backgroundColor: row.stock
-                                  ? (theme) => theme.palette.success.main
-                                  : (theme) => theme.palette.error.main,
-                                borderRadius: '100%',
-                                height: '10px',
-                                width: '10px',
-                              }}
-                            />
-                            <Typography
-                              color="textSecondary"
-                              variant="subtitle2"
-                              sx={{
-                                ml: 1,
-                              }}
-                            >
-                              {row.stock ? 'InStock' : 'Out of Stock'}
-                            </Typography>
-                          </Box>
-                        </TableCell>
+          <TableCell>
+    <StockProgressBar stock={row.stock} />
+  </TableCell>
 
-                        <TableCell>
-                          <Typography fontWeight="500" variant="h6">
-                            ${row.price}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Tooltip title="Edit Invoice">
-                            <IconButton
-                              color="success"
-                              component={Link}
-                              to={`/apps/ecommerce/edit-product/${row._id}`} // Usamos row._id para obtener el id del producto
-                            >
-                              <IconEdit width={22} />
-                            </IconButton>
-                          </Tooltip>
+          <TableCell>
+            <Typography fontWeight="500" variant="h6">
+              ${row.price}
+            </Typography>
+          </TableCell>
 
-                          <Tooltip title="Ver detalles del producto">
-                            <IconButton
-                              color="primary"
-                              component={Link}
-                              to={`/apps/ecommerce/detail/${row._id}`}
-                            >
-                              <IconEye width={22} />
-                            </IconButton>
-                          </Tooltip>
+          <TableCell>
+            <Typography
+              fontWeight="500"
+              variant="h6"
+              color={row.discount > 0 ? 'success.main' : 'text.secondary'}
+            >
+              {row.discount > 0 ? `${row.discount}%` : '0%' }
+            </Typography>
+          </TableCell>
 
-                          <Tooltip title="Eliminar producto">
-                            <IconButton
-                              color="error"
-                              onClick={() => handleClickOpen(row._id)}
-                            >
-                              <IconTrash width={22} />
-                            </IconButton>
-                          </Tooltip>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
+          <TableCell align="center">
+            <Tooltip title="Editar producto">
+              <IconButton
+                color="success"
+                component={Link}
+                to={`/apps/ecommerce/edit-product/${row._id}`}
+              >
+                <IconEdit width={22} />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Ver detalles del producto">
+              <IconButton
+                color="primary"
+                component={Link}
+                to={`/apps/ecommerce/detail/${row._id}`}
+              >
+                <IconEye width={22} />
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Eliminar producto">
+              <IconButton
+                color="error"
+                onClick={() => handleClickOpen(row._id)}
+              >
+                <IconTrash width={22} />
+              </IconButton>
+            </Tooltip>
+          </TableCell>
+        </TableRow>
+      );
+    })}
+</TableBody>
             </Table>
           </TableContainer>
           <TablePagination

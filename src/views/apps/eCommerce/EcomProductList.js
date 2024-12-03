@@ -10,20 +10,20 @@ import { CardContent } from '@mui/material';
 
 const BCrumb = [
   {
-    to: '/',
-    title: 'Home',
+    to: '/recepcion',
+    title: 'Inicio',
   },
   {
-    title: 'Shop',
+    title: 'Lista',
   },
 ];
 
 const EcomProductList = () => {
   return (
     <InvoiceProvider>
-    <PageContainer title="Shop List" description="this is Shop List page">
+    <PageContainer title="Lista de productos" description="this is Shop List page">
       {/* breadcrumb */}
-      <Breadcrumb title="Ecom-Shop" items={BCrumb} />
+      <Breadcrumb title="Lista de productos" items={BCrumb} />
       <BlankCard>
       <CardContent>
         <ProductTableList />

@@ -1,29 +1,40 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useSelector } from 'react-redux';
 import { Box, Menu, Avatar, Typography, Divider, Button, IconButton } from '@mui/material';
 import * as dropdownData from './data';
-
 import { IconMail } from '@tabler/icons';
 import { Stack } from '@mui/system';
-
-import ProfileImg from 'src/assets/images/profile/user-1.jpg';
-import unlimitedImg from 'src/assets/images/backgrounds/unlimited-bg.png';
 import Scrollbar from 'src/components/custom-scroll/Scrollbar';
+
+const SERVER_URL = 'http://localhost:4000';
 
 const Profile = () => {
   const [anchorEl2, setAnchorEl2] = useState(null);
+  const user = useSelector((state) => state.user.userProfile);
+  const navigate = useNavigate(); // Para redirigir al login
+
+  const userImage = `http://localhost:4000/images/users/${user.id}.png`;
+
   const handleClick2 = (event) => {
     setAnchorEl2(event.currentTarget);
   };
+
   const handleClose2 = () => {
     setAnchorEl2(null);
+  };
+
+  // Función para cerrar sesión
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Borra el token del localStorage
+    navigate('/auth/login'); // Redirige al login
   };
 
   return (
     <Box>
       <IconButton
         size="large"
-        aria-label="show 11 new notifications"
+        aria-label="show user profile"
         color="inherit"
         aria-controls="msgs-menu"
         aria-haspopup="true"
@@ -35,17 +46,17 @@ const Profile = () => {
         onClick={handleClick2}
       >
         <Avatar
-          src={ProfileImg}
-          alt={ProfileImg}
+          src={userImage}
+          alt={user.nombre}
           sx={{
             width: 35,
             height: 35,
           }}
+          onError={(e) => {
+            e.target.src = '/default-avatar.png';
+          }}
         />
       </IconButton>
-      {/* ------------------------------------------- */}
-      {/* Message Dropdown */}
-      {/* ------------------------------------------- */}
       <Menu
         id="msgs-menu"
         anchorEl={anchorEl2}
@@ -62,15 +73,22 @@ const Profile = () => {
       >
         <Scrollbar sx={{ height: '100%', maxHeight: '85vh' }}>
           <Box p={3}>
-            <Typography variant="h5">User Profile</Typography>
+            <Typography variant="h5">Perfil Usuario</Typography>
             <Stack direction="row" py={3} spacing={2} alignItems="center">
-              <Avatar src={ProfileImg} alt={ProfileImg} sx={{ width: 95, height: 95 }} />
+              <Avatar
+                src={userImage}
+                alt={user.nombre}
+                sx={{ width: 95, height: 95 }}
+                onError={(e) => {
+                  e.target.src = '/default-avatar.png';
+                }}
+              />
               <Box>
                 <Typography variant="subtitle2" color="textPrimary" fontWeight={600}>
-                  Mathew Anderson
+                  {user.nombre} {user.apellido}
                 </Typography>
                 <Typography variant="subtitle2" color="textSecondary">
-                  Designer
+                  {user.department || 'Sin departamento'}
                 </Typography>
                 <Typography
                   variant="subtitle2"
@@ -80,7 +98,7 @@ const Profile = () => {
                   gap={1}
                 >
                   <IconMail width={15} height={15} />
-                  info@modernize.com
+                  {user.email || 'Sin correo'}
                 </Typography>
               </Box>
             </Stack>
@@ -142,24 +160,22 @@ const Profile = () => {
                 <Box display="flex" justifyContent="space-between">
                   <Box>
                     <Typography variant="h5" mb={2}>
-                      Unlimited <br />
-                      Access
+                      Checador de<br />
+                      Horario
                     </Typography>
                     <Button variant="contained" color="primary">
-                      Upgrade
+                      ENTRADA
                     </Button>
                   </Box>
-                  <img src={unlimitedImg} alt="unlimited" className="signup-bg"></img>
                 </Box>
               </Box>
               <Button
-                to="/auth/login"
                 variant="outlined"
                 color="primary"
-                component={Link}
                 fullWidth
+                onClick={handleLogout} // Llama a la función de logout
               >
-                Logout
+                Cerrar Sesión
               </Button>
             </Box>
           </Box>

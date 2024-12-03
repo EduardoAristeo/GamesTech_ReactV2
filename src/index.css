@@ -22,3 +22,16 @@
     }
   }
   
+  .custom-pattern-lock circle {
+    fill: #5d87ff !important; /* Cambia el color de los círculos */
+  }
+  
+  .custom-pattern-lock .connector {
+    stroke: #5d87ff !important; /* Cambia el color de las líneas */
+    stroke-width: 4px !important; /* Ajusta el grosor de las líneas */
+  }
+  
+  .custom-pattern-lock .circle.active {
+    fill: #5d87ff !important; /* Cambia el color de los círculos activos */
+  }
+  

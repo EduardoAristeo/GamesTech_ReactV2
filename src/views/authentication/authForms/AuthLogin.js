@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Typography,
@@ -9,7 +9,7 @@ import {
   Divider,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../../hooks/useAuth';
+import { useTokenAuth } from '../../../hooks/useTokenAuth'; // Cambiar al nuevo hook
 import CustomCheckbox from '../../../components/forms/theme-elements/CustomCheckbox';
 import CustomTextField from '../../../components/forms/theme-elements/CustomTextField';
 import { ToastContainer } from 'react-toastify'; // Importar ToastContainer
@@ -19,11 +19,19 @@ import CustomFormLabel from '../../../components/forms/theme-elements/CustomForm
 const AuthLogin = ({ title, subtitle, subtext }) => {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
-  const { login, loading } = useAuth(); // Usar el hook personalizado
+  const [rememberDevice, setRememberDevice] = useState(true); // Estado para el checkbox
+  const { login, loading } = useTokenAuth(); // Usar el nuevo hook
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login(user, password);
+    try {
+      await login(user, password); // Llamar a la función de login
+      console.log('Inicio de sesión exitoso');
+    } catch (error) {
+      console.error('Error en el login:', error);
+      setUser('');
+      setPassword('');
+    }
   };
 
   return (
@@ -62,6 +70,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
               fullWidth
               value={user}
               onChange={(e) => setUser(e.target.value)}
+              aria-label="Ingrese su usuario"
             />
           </Box>
           <Box>
@@ -73,12 +82,18 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
               fullWidth
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              aria-label="Ingrese su contraseña"
             />
           </Box>
           <Stack justifyContent="space-between" direction="row" alignItems="center" my={2}>
             <FormGroup>
               <FormControlLabel
-                control={<CustomCheckbox defaultChecked />}
+                control={
+                  <CustomCheckbox
+                    checked={rememberDevice}
+                    onChange={(e) => setRememberDevice(e.target.checked)}
+                  />
+                }
                 label="Recordar este dispositivo"
               />
             </FormGroup>
@@ -91,7 +106,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
                 color: 'primary.main',
               }}
             >
-              olvidaste tu contraseña ?
+              ¿Olvidaste tu contraseña?
             </Typography>
           </Stack>
         </Stack>
@@ -102,7 +117,7 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
             size="large"
             fullWidth
             type="submit"
-            disabled={loading}
+            disabled={loading || !user || !password}
           >
             {loading ? 'Cargando...' : 'Entrar'}
           </Button>

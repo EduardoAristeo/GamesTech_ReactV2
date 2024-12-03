@@ -5,8 +5,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { hoverSidebar, toggleMobileSidebar } from 'src/store/customizer/CustomizerSlice';
 import Scrollbar from 'src/components/custom-scroll/Scrollbar';
 import { Profile } from './SidebarProfile/Profile';
+import { useAuth } from 'src/context/AuthContext';
 
 const Sidebar = () => {
+  const { user, loading } = useAuth(); // Obtén el usuario y el estado de carga
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   const customizer = useSelector((state) => state.customizer);
   const dispatch = useDispatch();
@@ -26,6 +28,11 @@ const Sidebar = () => {
     dispatch(hoverSidebar(false));
   };
 
+  if (loading) {
+    // Mostrar un indicador de carga si el contexto todavía está inicializando el usuario
+    return <div>Cargando...</div>;
+  }
+
   if (lgUp) {
     return (
       <Box
@@ -37,9 +44,6 @@ const Sidebar = () => {
           }),
         }}
       >
-        {/* ------------------------------------------- */}
-        {/* Sidebar for desktop */}
-        {/* ------------------------------------------- */}
         <Drawer
           anchor="left"
           open
@@ -56,9 +60,6 @@ const Sidebar = () => {
             },
           }}
         >
-          {/* ------------------------------------------- */}
-          {/* Sidebar Box */}
-          {/* ------------------------------------------- */}
           <Box
             sx={{
               backgroundColor:
@@ -69,17 +70,11 @@ const Sidebar = () => {
               height: '100%',
             }}
           >
-            {/* ------------------------------------------- */}
-            {/* Logo */}
-            {/* ------------------------------------------- */}
             <Box px={3}>
               <Logo />
             </Box>
             <Scrollbar sx={{ height: 'calc(100% - 190px)' }}>
-              {/* ------------------------------------------- */}
-              {/* Sidebar Items */}
-              {/* ------------------------------------------- */}
-              <SidebarItems />
+              <SidebarItems user={user} /> {/* Pasar el usuario como prop */}
             </Scrollbar>
             <Profile />
           </Box>
@@ -107,16 +102,10 @@ const Sidebar = () => {
         },
       }}
     >
-      {/* ------------------------------------------- */}
-      {/* Logo */}
-      {/* ------------------------------------------- */}
       <Box px={2}>
         <Logo />
       </Box>
-      {/* ------------------------------------------- */}
-      {/* Sidebar For Mobile */}
-      {/* ------------------------------------------- */}
-      <SidebarItems />
+      <SidebarItems user={user} /> {/* Pasar el usuario como prop */}
     </Drawer>
   );
 };

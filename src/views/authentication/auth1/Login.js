@@ -1,20 +1,16 @@
 
 
-import { Grid, Box, Typography } from '@mui/material';
-import PageContainer from 'src/components/container/PageContainer';
-import img1 from 'src/assets/images/backgrounds/login-bg.svg';
-import Logo from 'src/layouts/full/shared/logo/Logo';
-import AuthLogin from '../authForms/AuthLogin';
+import { Grid, Box, Card, } from '@mui/material';
 
-const Login = () => (
-  <PageContainer title="Login" description="this is Login page">
-    <Grid container spacing={0} sx={{ overflowX: 'hidden' }}>
-      <Grid
-        item
-        xs={12}
-        sm={12}
-        lg={7}
-        xl={8}
+// components
+import PageContainer from 'src/components/container/PageContainer';
+import AuthLogin from '../authForms/AuthLogin';
+import MyLogo from 'src/assets/images/logos/logo_gamestech.png';
+
+const Login2 = () => {
+  return (
+    <PageContainer title="Login" description="this is Login page">
+      <Box
         sx={{
           position: 'relative',
           '&:before': {
@@ -29,56 +25,33 @@ const Login = () => (
           },
         }}
       >
-        <Box position="relative">
-          <Box px={3}>
-            <Logo />
-          </Box>
-          <Box
-            alignItems="center"
+        <Grid container spacing={0} justifyContent="center" sx={{ height: '100vh' }}>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            lg={5}
+            xl={4}
+            display="flex"
             justifyContent="center"
-            height={'calc(100vh - 75px)'}
-            sx={{
-              display: {
-                xs: 'none',
-                lg: 'flex',
-              },
-            }}
+            alignItems="center"
           >
-            <img
-              src={img1}
-              alt="bg"
-              style={{
-                width: '100%',
-                maxWidth: '500px',
-              }}
-            />
-          </Box>
-        </Box>
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={12}
-        lg={5}
-        xl={4}
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Box p={4}>
-          <AuthLogin
-            title="Bienvenido a GamesTech"
-            subtext={
-              <Typography variant="subtitle1" color="textSecondary" mb={1}>
-                El mejor software de gestión de talleres
-              </Typography>
-            }
-           
-          />
-        </Box>
-      </Grid>
-    </Grid>
-  </PageContainer>
-);
+            <Card elevation={9} sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '450px' }}>
+              <Box display="flex" alignItems="center" justifyContent="center">
+                <Box display="flex" alignItems="center" justifyContent="center">
+                  <img src={MyLogo} alt="My Logo" style={{ maxWidth: '150px' }} />
+                </Box>
 
-export default Login;
+              </Box>
+              <AuthLogin
+
+              />
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
+    </PageContainer>
+  );
+};
+
+export default Login2;
